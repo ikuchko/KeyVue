@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ArchiveReaderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2016-05-06T21:08:00" hostname="1JOHN" time="1.612">
+  <properties/>
+  <testcase name="ftp_getZipFileNotNull" classname="ArchiveReaderTest" time="0.816"/>
+  <testcase name="ftp_getFilesListFromServer" classname="ArchiveReaderTest" time="0.795"/>
+  <system-out><![CDATA[220 ProFTPD 1.3.5b Server (FTPDAS2 FTP) [::ffff:206.72.110.181]
+
+220 ProFTPD 1.3.5b Server (FTPDAS2 FTP) [::ffff:206.72.110.181]
+
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
