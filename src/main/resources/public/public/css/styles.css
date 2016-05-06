@@ -1,0 +1,175 @@
+h1 {
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+}
+
+h3, h4, p {
+  font-family: 'Montserrat', sans-serif;
+}
+
+a.task-board {
+  text-decoration: none !important;
+  color: #751C5C;
+  font-size: 16px;
+}
+
+.adon-width {
+  width: 30px;
+}
+
+.center {
+  text-align: center;
+}
+
+.panel-title {
+  font-size: 18px;
+}
+
+.jumbotron {
+  background-color: #F8F8F8;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding: 15px;
+}
+
+.mini-jumbotron {
+  padding: 15px !important;
+}
+
+#righ-float-button{
+  float: right;
+}
+
+.bg-warning .bg-success {
+  padding: 10px;
+}
+
+.form-horizontal {
+  padding: 10px;
+}
+
+.input {
+  width: 100%;
+}
+
+.important {
+  font-size: 25px;
+}
+
+.small {
+  max-width: 180px;
+}
+
+.fix-width-7p {
+  width: 70%;
+}
+
+.small-text {
+  font-size: 10px;
+  color: #B73398;
+}
+
+.link {
+  background:none!important;
+  border:none;
+  padding:0!important;
+  font: inherit;
+  cursor: pointer;
+  color: #947133;
+}
+
+.newUserLabel {
+  text-align: left;
+  margin: 5px;
+  font-weight: 300;
+}
+
+.panel-heading {
+  padding: 10px 0px 0px 0px !important;
+}
+
+.message {
+  font-size: 15px !important;
+  margin-bottom: 0px;
+}
+.message-box {
+  padding: 10px 20px;
+}
+
+.board-task-box {
+  padding: 10px;
+}
+
+.task .btn {
+  display:inline;
+}
+
+.left-padding {
+  padding-left: 10px;
+}
+
+#dev-add-task {
+  margin: 0 auto;
+  width:700px;
+  text-align: center;
+}
+
+.panel-heading {
+  text-align: center;
+}
+
+.des-text {
+  height: 220px;
+}
+
+.board-task {
+  margin: 5px;
+}
+
+.inline {
+  float: left;
+
+}
+
+.float-left {
+  float: left;
+
+}
+
+.italic {
+  font-style: italic;
+
+/* unvisited link */
+a.storyLink:link {
+    color: #476674;
+}
+
+/* visited link */
+a.storyLink:visited {
+    color: #476674;
+}
+
+/* mouse over link */
+a.storyLink:hover {
+    color: #CCCCCC;
+}
+
+/* unvisited link */
+a.taskLink:link {
+    color: #6B8D9C;
+}
+
+/* visited link */
+a.taskLink:visited {
+    color: #6B8D9C;
+}
+
+/* mouse over link */
+a.taskLink:hover {
+    color: #CCCCCC;
+}
+
+.homePage {
+  display: flex;
+  align-items: center;
+}
