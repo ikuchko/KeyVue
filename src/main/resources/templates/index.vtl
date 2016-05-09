@@ -5,8 +5,11 @@
     <br>
     <p>Log in to KeyVue</p>
     <br>
+    <div class="hide-massage alert alert-danger" id="auth-error">
+      Your user name or password was incorrect. Please try again.
+    </div>
     <div class="login-from">
-      <form action="/transfer" data-toggle="validator" method="get" role="form" id="login-form">
+      <form action="/documents" data-toggle="validator" method="get" role="form" id="login-form">
         <div class="form-group">
           <label for="login" class="col-sm-2 control-label">Login</label>
           <input type="text" class="form-control" id="login" placeholder="Login" minlength="5" required>
@@ -21,6 +24,9 @@
           <button type="submit" class="btn btn-success btn-block">Go!</button>
         </div>
       </form>
+    </div>
+    <div id="new-content">
+
     </div>
   </div>
 </div>

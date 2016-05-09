@@ -13,18 +13,22 @@ public class App {
 		staticFileLocation("/public");
 
 		get("/", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-//		      model.put("users", User.all());
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
-	  }, new VelocityTemplateEngine());
+			HashMap<String, Object> model = new HashMap<String, Object>();
+		    model.put("template", "templates/index.vtl");
+		    return new ModelAndView(model, layout);
+		}, new VelocityTemplateEngine());
 
-		get("transfer", (request, response) -> {
-  		// response.redirect("/");
+		get("verifyUser", (request, response) -> {
 			String user = request.queryParams("user");
 			String password = request.queryParams("pass");
-			return user + " " + password;
+			return DB.verifyUser(user, password);
 		});
+
+		get("documents", (request, response) -> {
+			HashMap<String, Object> model = new HashMap<String, Object>();
+			model.put("template", "templates/document.vtl");
+			return new ModelAndView(model, layout);
+		}, new VelocityTemplateEngine());
 
 	}
 
