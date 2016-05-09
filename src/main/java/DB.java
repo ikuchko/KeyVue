@@ -10,8 +10,10 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 
 public class DB {
-
-	public static MysqlDataSource getMySQLDataSource() {
+	public static final Integer DB_FTPUSER = 1;
+	public static final Integer DB_DOCUMENTS = 2;
+	
+	public static MysqlDataSource getMySQLDataSource(Integer db) {
 		Properties properties = new Properties();
 		FileInputStream fileInputStream = null;
 		MysqlDataSource mysqlDS = null;
@@ -19,7 +21,11 @@ public class DB {
 			fileInputStream = new FileInputStream("./resources/mySQL.properties");
 			properties.load(fileInputStream);
 			mysqlDS = new MysqlDataSource();
-			mysqlDS.setUrl(properties.getProperty("MYSQL_DB_URL"));
+			if (db == 1) {
+				mysqlDS.setUrl(properties.getProperty("MYSQL_DB_FTPUSERS_URL"));				
+			} else if (db == 2) {
+				mysqlDS.setUrl(properties.getProperty("MYSQL_DB_DOCUMENTS_URL"));
+			} else return null;
 			mysqlDS.setUser(properties.getProperty("MYSQL_DB_USERNAME"));
 			mysqlDS.setPassword(properties.getProperty("MYSQL_DB_PASSWORD"));
 		} catch (IOException e) {
@@ -29,12 +35,12 @@ public class DB {
 		return mysqlDS;
 	}
 	
-	public static int requestData(String query) {
+	public static int requestData(String query, Integer db) {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		Statement statement = null;
 		int rowsAmount = 0;
-		MysqlDataSource dataSource = getMySQLDataSource();
+		MysqlDataSource dataSource = getMySQLDataSource(db);
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
@@ -55,4 +61,8 @@ public class DB {
 		}
 		return rowsAmount;
 	}
+	
+//	public static Boolean verifyUser(String login, String password) {
+//		String query = "SELECT * FROM "
+//	}
 }
