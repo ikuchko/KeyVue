@@ -18,10 +18,10 @@ public class App {
       return new ModelAndView(model, layout);
 	  }, new VelocityTemplateEngine());
 
-		get("/transfer", (request, response) -> {
-			HashMap<String, Object> model = new HashMap<String, Object>();
-
-		}, new VelocityTemplateEngine());
+		// get("/transfer", (request, response) -> {
+		// 	HashMap<String, Object> model = new HashMap<String, Object>();
+		//
+		// }, new VelocityTemplateEngine());
 
 	}
 
