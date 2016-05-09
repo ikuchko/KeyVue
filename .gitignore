@@ -51,6 +51,7 @@ Thumbs.db
 .gradle
 build/
 temp/
+bin/
 
 # Ignore Gradle GUI config
 gradle-app.setting
