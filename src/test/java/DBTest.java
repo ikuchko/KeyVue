@@ -19,4 +19,9 @@ public class DBTest {
 		int rows = DB.requestData(query, DB.DB_FTPUSER);
 		assertTrue(rows > 0);
 	}
+	
+	@Test 
+	public void db_verifyUserSuccesfully() {
+		assertTrue(DB.verifyUser("lps_nort", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517"));
+	}
 }

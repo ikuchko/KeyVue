@@ -62,7 +62,8 @@ public class DB {
 		return rowsAmount;
 	}
 	
-//	public static Boolean verifyUser(String login, String password) {
-//		String query = "SELECT * FROM "
-//	}
+	public static Boolean verifyUser(String login, String password) {
+		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND passwd = '%s'", login, password);
+		return (requestData(query, DB_FTPUSER) > 0);
+	}
 }
