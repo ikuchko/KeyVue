@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="DBTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2016-05-06T21:33:39" hostname="1JOHN" time="0.312">
-  <properties/>
-  <testcase name="db_returnDataFromDB" classname="DBTest" time="0.312"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

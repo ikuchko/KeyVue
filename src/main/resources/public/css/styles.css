@@ -1,6 +1,7 @@
 h1 {
   text-align: center;
   font-family: 'Oswald', sans-serif;
+  color: red;
 }
 
 h3, h4, p {
@@ -34,6 +35,11 @@ a.task-board {
 
 .mini-jumbotron {
   padding: 15px !important;
+}
+
+.login-from {
+  margin: auto;
+  width: 40% !important;
 }
 
 #righ-float-button{

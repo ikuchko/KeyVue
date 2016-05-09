@@ -5,17 +5,21 @@
     <br>
     <p>Log in to KeyVue</p>
     <br>
-    <div style="margin: auto; width: 40% !important;">
-      <form action="/transfer" method="get">
+    <div class="login-from">
+      <form action="/transfer" data-toggle="validator" method="get" role="form">
         <div class="form-group">
           <label for="login" class="col-sm-2 control-label">Login</label>
-          <input type="text" class="form-control" id="login" placeholder="Login">
+          <input type="text" class="form-control" id="login" placeholder="Login" minlength="5" required>
+          <div class="help-block with-errors"></div>
         </div>
     		<div class="form-group">
     		  <label for="password" class="col-sm-2 control-label">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password">
+          <input type="password" class="form-control" id="password" placeholder="Password" required>
+          <div class="help-block with-errors"></div>
         </div>
-        <button type="submit" class="btn btn-success btn-block">Go!</button>
+        <div class="form-group">
+          <button type="submit" class="btn btn-success btn-block">Go!</button>
+        </div>
       </form>
     </div>
   </div>
