@@ -1,6 +1,9 @@
 
 import java.util.HashMap;
 import java.util.List;
+
+import javax.print.DocFlavor.STRING;
+
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 import static spark.Spark.*;
@@ -24,9 +27,17 @@ public class App {
 			return DB.verifyUser(user, password);
 		});
 
-		get("documents", (request, response) -> {
+		post("documents", (request, response) -> {
 			HashMap<String, Object> model = new HashMap<String, Object>();
 			model.put("template", "templates/document.vtl");
+			String user = request.queryParams("login");
+			String password = request.queryParams("password");
+			HashMap<String, String> credential = new HashMap<>();
+			credential.put("login", user);
+			credential.put("password", password);
+			Session session = new Session(user, password);
+			session.setFTPFiles(ArchiveReader.loadFiles(credential));
+			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());
 

@@ -34,7 +34,7 @@ public class SessionTest {
 		String ftpUserLogin = "lps_nort";
 		String ftpUserPasswrd = "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517";
 		Session session = new Session(ftpUserLogin, ftpUserPasswrd);
-		session.setZipFiles(fileList);
+		session.setFTPFiles(fileList);
 		assertTrue(session.getFTPFiles().size() > 0);
 	}
 

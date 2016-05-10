@@ -1,3 +1,23 @@
-<p>
-  Document page!
-</p>
+<div class="row">
+  <div class="col-md-3">
+    <div class="page-title">
+      <h2>State and County here and/or client name</h2>
+    </div>
+    <table class="table table-hover table-condensed">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>File name</th>
+        </tr>
+      </thead>
+      <tbody>
+        #foreach($ftpFile in $session.getFTPFiles())
+          <tr>
+            <th scope="row">$velocityCount</th>
+            <td>$ftpFile.getName()</td>
+          </tr>
+        #end
+      </tbody>
+    </div>
+  </div>
+</div>

@@ -35,7 +35,7 @@ public class Session {
 		return sessionList;
 	}
 	
-	public void setZipFiles(List<FTPFile> fileList) {
+	public void setFTPFiles(List<FTPFile> fileList) {
 		this.ftpFileList = fileList;
 	}
 	
