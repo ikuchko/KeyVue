@@ -59,6 +59,10 @@ public class ArchiveReader {
 		return fileList;
 	}
 	
+	public static List<FTPFile> loadFiles (HashMap<String, String> credential) {
+		return loadFiles(credential, "/");
+	}
+	
 	public static ZipFile getZipFile(HashMap<String, String> credential, FTPFile ftpFile) {
 		FTPClient ftpClient = new FTPClient();
 		ZipFile zipFile = null;
