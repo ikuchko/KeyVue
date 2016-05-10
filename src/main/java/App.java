@@ -1,8 +1,11 @@
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.print.DocFlavor.STRING;
+import javax.servlet.http.HttpServletResponse;
 
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -40,6 +43,15 @@ public class App {
 			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());
+		
+		get("tiff", (request, response) -> {
+			byte[] bytes = Files.readAllBytes(Paths.get("temp/201600004068.tif"));
+			HttpServletResponse raw = response.raw();
+			raw.getOutputStream().write(bytes);
+			raw.getOutputStream().flush();
+			raw.getOutputStream().close();			
+			return response.raw();
+		});
 
 	}
 
