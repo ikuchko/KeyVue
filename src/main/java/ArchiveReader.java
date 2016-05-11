@@ -67,7 +67,7 @@ public class ArchiveReader {
 		FTPClient ftpClient = new FTPClient();
 		ZipFile zipFile = null;
 		File file = new File("temp/" + ftpFile.getName());
-		if (file.exists() && !file.isDirectory()) {
+		if (file.exists() && !file.isDirectory() && file.length() > 0) {
 			try {
 				zipFile = new ZipFile("temp/" + ftpFile.getName());
 			} catch (IOException e) {
