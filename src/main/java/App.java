@@ -47,6 +47,7 @@ public class App {
 		get("tiff", (request, response) -> {
 			byte[] bytes = Files.readAllBytes(Paths.get("temp/201600004068.tif"));
 			HttpServletResponse raw = response.raw();
+			raw.setContentType("image/tiff");
 			raw.getOutputStream().write(bytes);
 			raw.getOutputStream().flush();
 			raw.getOutputStream().close();			

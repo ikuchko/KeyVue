@@ -4,11 +4,17 @@ $(function() {
     verifyUser($('#login').val(), $('#password').val(), event);
   });
 
+  // $.get( "/tiff", function( data ) {
+  //   alert("Response here: " + data);
+  // });
+
   var fileTypes = ['jpg', 'jpeg', 'png', 'tiff', 'tif', 'pdf']; //acceptable file types
   $("input:file").change(function(evt) {
+  // $.get( "/tiff", function( evt ) {
     var parentEl = $(this).parent();
     $(this).parent().find("img.preview").remove();
     $(this).parent().find("canvas.preview").remove();
+    debugger;
     var tgt = evt.target || window.event.srcElement,
       files = tgt.files;
     // FileReader support
