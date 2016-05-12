@@ -5,8 +5,59 @@ $(function() {
   });
 
   // $.get( "/tiff", function( data ) {
+  //   var parentEl = $(this).parent();
   //   alert("Response here: " + data);
+  //   var b64Response = btoa(data);
+  //
+  //   // create an image
+  //   var outputImg = document.createElement('img');
+  //   outputImg.src = 'data:image/png;base64,'+b64Response;
+  //
+  //   // append it to your page
+  //   document.body.appendChild(outputImg);
+  //
+  //   // var filrR = new FileReader();
+  //   // filrR.onload = function(e) {
+  //   //   $(parentEl).append('<img src="' + filrR.result + '" class="preview"/>');
+  //   // };
+  //   // filrR.readAsDataURL(data);
+  //
+  //   // $(parentEl).append('<img src="' + fr.result + '" class="preview"/>');
   // });
+
+
+
+  $.get( "/tiff", function( data ) {
+    var parentEl = $(this).parent();
+    alert(data);
+    var fr = new FileReader();
+    fr.onload = function(e) {
+      //Using tiff.min.js library - https://github.com/seikichi/tiff.js/tree/master
+      console.debug("Parsing TIFF image...");
+      //initialize with 100MB for large files
+      Tiff.initialize({
+        TOTAL_MEMORY: 100000000
+      });
+      var tiff = new Tiff({
+        buffer: e.target.result
+      });
+      var tiffCanvas = tiff.toCanvas();
+      $(tiffCanvas).css({
+        "max-width": "1000000px",
+        "width": "100%",
+        "height": "auto",
+        "display": "block",
+        "padding-top": "10px"
+      }).addClass("preview");
+      $(parentEl).append(tiffCanvas);
+    }
+
+    fr.onloadend = function(e) {
+      console.debug("Load End");
+    }
+    var blob = new Blob([data], {type: 'image/tiff'});
+      fr.readAsArrayBuffer(data);
+  });
 
   var fileTypes = ['jpg', 'jpeg', 'png', 'tiff', 'tif', 'pdf']; //acceptable file types
   $("input:file").change(function(evt) {
@@ -14,7 +65,6 @@ $(function() {
     var parentEl = $(this).parent();
     $(this).parent().find("img.preview").remove();
     $(this).parent().find("canvas.preview").remove();
-    debugger;
     var tgt = evt.target || window.event.srcElement,
       files = tgt.files;
     // FileReader support
