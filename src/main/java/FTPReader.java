@@ -15,6 +15,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 public class FTPReader {
 	//private static List<FTPFile> ftpFiles;
+	private static final String DESTINATION_DIRECTORY = "src/main/resources/temp/FTPInput/";
 	private static FTPClient ftp = new FTPClient();
 	private static String server = "";
 	
@@ -66,20 +67,22 @@ public class FTPReader {
 	public static ZipFile getZipFile(HashMap<String, String> credential, FTPFile ftpFile) {
 		FTPClient ftpClient = new FTPClient();
 		ZipFile zipFile = null;
-		File file = new File("temp/" + ftpFile.getName());
+		String destination = DESTINATION_DIRECTORY + credential.get("login") + "/";
+		
+		File file = new File(destination + ftpFile.getName());
 		if (file.exists() && !file.isDirectory() && file.length() > 0) {
 			try {
-				zipFile = new ZipFile("temp/" + ftpFile.getName());
+				zipFile = new ZipFile(destination + ftpFile.getName());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				File tempFolder = new File("temp/");
+				File tempFolder = new File(destination);
 				tempFolder.mkdirs();
 				
-				FileOutputStream outStream = new FileOutputStream(new File("temp/" + ftpFile.getName()));
+				FileOutputStream outStream = new FileOutputStream(new File(destination + ftpFile.getName()));
 				ftpClient.connect(server);
 				
 				ftpClient.login(credential.get("login"), credential.get("password"));
@@ -91,7 +94,7 @@ public class FTPReader {
 				ftpClient.logout();
 				ftpClient.disconnect();
 				
-				zipFile = new ZipFile("temp/" + ftpFile.getName());
+				zipFile = new ZipFile(destination + ftpFile.getName());
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
