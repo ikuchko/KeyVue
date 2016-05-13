@@ -36,6 +36,7 @@ public class SessionTest {
 		Session session = new Session(ftpUserLogin, ftpUserPasswrd);
 		session.setFTPFiles(fileList);
 		assertTrue(session.getFTPFiles().size() > 0);
+		assertTrue(session.getFTPTxtFiles().size() > 0);
 	}
 
 }

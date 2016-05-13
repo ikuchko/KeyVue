@@ -10,7 +10,8 @@ public class Session {
 	private String ftpUserPassword;
 	private LocalDateTime dateTimeCreated;
 	private List<FTPFile> ftpFileList = new ArrayList<>();
-	private static ArrayList<Session> sessionList = new ArrayList<>();
+	private List<FTPFile> ftpTxtFileList = new ArrayList<>();
+	private static List<Session> sessionList = new ArrayList<>();
 	
 	public Session (String user, String passwrd) {
 		this.ftpUserLogin = user;
@@ -31,12 +32,28 @@ public class Session {
 		return ftpFileList;
 	}
 	
-	public static ArrayList<Session> getSessionList() {
+	public List<FTPFile> getFTPTxtFiles() {
+		return ftpTxtFileList;
+	}
+	
+	public static List<Session> getSessionList() {
 		return sessionList;
 	}
 	
 	public void setFTPFiles(List<FTPFile> fileList) {
-		this.ftpFileList = fileList;
+		for (int i=0; i<fileList.size(); i++) {
+			FTPFile file = fileList.get(i); 
+			if (file.isFile()) {
+				String[] parts = file.getName().split("[.]");
+				if (parts[parts.length-1].equals("zip")) {
+					this.ftpFileList.add(file);
+				} else {
+					this.ftpTxtFileList.add(file);
+				}
+			} else {
+				this.ftpFileList.add(file);   //populate list with directories
+			}
+		}
 	}
 	
 	public static Session findSessionByUserLogin(String ftpUserLogin) {

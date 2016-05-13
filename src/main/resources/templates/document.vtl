@@ -19,6 +19,26 @@
         #end
       </tbody>
     </table>
+    #if($session.getFTPTxtFiles().size() > 0)
+      <br>
+      <h4>Files to download</h4>
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>File name</th>
+          </tr>
+        </thead>
+        <tbody>
+          #foreach($ftpFile in $session.getFTPTxtFiles())
+          <tr>
+            <th scope="row">$velocityCount</th>
+            <td>$ftpFile.getName()</td>
+          </tr>
+          #end
+        </tbody>
+      </table>
+    #end
   </div>
   <div class="col-md-9">
     <h2>Image:</h2>
