@@ -7,7 +7,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.zip.ZipFile;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -15,7 +16,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 public class FTPReader {
 	//private static List<FTPFile> ftpFiles;
-	private static final String DESTINATION_DIRECTORY = "src/main/resources/temp/FTPInput/";
+	public static final String DESTINATION_DIRECTORY = "src/main/resources/temp/FTPInput/";
 	private static FTPClient ftp = new FTPClient();
 	private static String server = "";
 	
@@ -73,9 +74,9 @@ public class FTPReader {
 		if (file.exists() && !file.isDirectory() && file.length() > 0) {
 			try {
 				zipFile = new ZipFile(destination + ftpFile.getName());
-			} catch (IOException e) {
+			} catch (ZipException ze) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				ze.printStackTrace();
 			}
 		} else {
 			try {
@@ -97,6 +98,8 @@ public class FTPReader {
 				zipFile = new ZipFile(destination + ftpFile.getName());
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+			} catch (ZipException ze) {
+				ze.printStackTrace();
 			}
 		}
 		return zipFile;

@@ -22,6 +22,6 @@ public class DBTest {
 	
 	@Test 
 	public void db_verifyUserSuccesfully() {
-		assertTrue(DB.verifyUser("lps_nort", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517"));
+		assertTrue(DB.verifyUser("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F"));
 	}
 }

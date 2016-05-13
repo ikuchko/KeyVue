@@ -9,8 +9,8 @@ public class FTPReaderTest {
 	@Test
 	public void ftp_getFilesListFromServer() {
 		HashMap<String, String> userCredential = new HashMap<>();
-		userCredential.put("login", "lps_nort");
-		userCredential.put("password", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517");
+		userCredential.put("login", "lps_chespa");
+		userCredential.put("password", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
 		assertTrue(FTPReader.loadFiles(userCredential).size() > 0);
 		assertTrue(FTPReader.loadFiles(userCredential).size() > 0);
 	}
@@ -20,8 +20,8 @@ public class FTPReaderTest {
 		HashMap<String, String> userCredential = new HashMap<>();
 //		userCredential.put("login", "lps_cach");
 //		userCredential.put("password", "*104225F624BE7AFB3D736E46DC84ED3528739B71");
-		userCredential.put("login", "lps_nort");
-		userCredential.put("password", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517");
+		userCredential.put("login", "lps_chespa");
+		userCredential.put("password", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
 		FTPFile ftpFile = FTPReader.loadFiles(userCredential).get(1);
 		assertTrue(FTPReader.getZipFile(userCredential, ftpFile) != null);
 	}

@@ -11,16 +11,16 @@ public class SessionTest {
 	
 	@Test
 	public void session_createdCorrectly() {
-		String ftpUserLogin = "lps_nort";
-		String ftpUserPasswrd = "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517";
+		String ftpUserLogin = "lps_chespa";
+		String ftpUserPasswrd = "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F";
 		Session session = new Session(ftpUserLogin, ftpUserPasswrd);
 		assertTrue(Session.getSessionList().size() > 0);
 	}
 	
 	@Test
 	public void session_findUserByLogin() {
-		String ftpUserLogin = "lps_nort";
-		String ftpUserPasswrd = "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517";
+		String ftpUserLogin = "lps_chespa";
+		String ftpUserPasswrd = "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F";
 		new Session(ftpUserLogin, ftpUserPasswrd);
 		assertTrue(Session.findSessionByUserLogin(ftpUserLogin) != null);
 	}
@@ -28,11 +28,11 @@ public class SessionTest {
 	@Test 
 	public void sesion_zipListCorrectlyPopulated() {
 		HashMap<String, String> userCredential = new HashMap<>();
-		userCredential.put("login", "lps_nort");
-		userCredential.put("password", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517");
+		userCredential.put("login", "lps_chespa");
+		userCredential.put("password", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
 		List<FTPFile> fileList = FTPReader.loadFiles(userCredential);
-		String ftpUserLogin = "lps_nort";
-		String ftpUserPasswrd = "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517";
+		String ftpUserLogin = "lps_chespa";
+		String ftpUserPasswrd = "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F";
 		Session session = new Session(ftpUserLogin, ftpUserPasswrd);
 		session.setFTPFiles(fileList);
 		assertTrue(session.getFTPFiles().size() > 0);
