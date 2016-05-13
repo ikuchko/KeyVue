@@ -30,7 +30,7 @@ public class SessionTest {
 		HashMap<String, String> userCredential = new HashMap<>();
 		userCredential.put("login", "lps_nort");
 		userCredential.put("password", "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517");
-		List<FTPFile> fileList = ArchiveReader.loadFiles(userCredential);
+		List<FTPFile> fileList = FTPReader.loadFiles(userCredential);
 		String ftpUserLogin = "lps_nort";
 		String ftpUserPasswrd = "*9AB6B66ED84DF00A6A5FBBC30CFBCA963BF05517";
 		Session session = new Session(ftpUserLogin, ftpUserPasswrd);

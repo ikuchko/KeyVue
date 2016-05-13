@@ -45,7 +45,7 @@ public class App {
 			credential.put("login", user);
 			credential.put("password", password);
 			Session session = new Session(user, password);
-			session.setFTPFiles(ArchiveReader.loadFiles(credential));
+			session.setFTPFiles(FTPReader.loadFiles(credential));
 			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());
