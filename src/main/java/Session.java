@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.zip.*;
 
 import org.apache.commons.net.ftp.FTPFile;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+
 
 public class Session {
 	private String ftpUserLogin;
@@ -63,5 +67,15 @@ public class Session {
 			}
 		}
 		return null;
+	}
+
+	public List<String> getFilesJSON() {
+		JSONArray arrayJASON = new JSONArray();
+		for (int i=0; i<ftpFileList.size(); i++) {
+			JSONObject objectJSON = new JSONObject();
+			objectJSON.put("text", ftpFileList.get(i).getName());
+			arrayJASON.add(objectJSON);
+		}
+		return arrayJASON;
 	}
 }

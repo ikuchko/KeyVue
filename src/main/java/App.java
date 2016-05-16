@@ -49,17 +49,13 @@ public class App {
 			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());
-		
-		get("tiff", (request, response) -> {
-			byte[] bytes = Files.readAllBytes(Paths.get("temp/201600004068.tif"));
-			HttpServletResponse raw = response.raw();
-			raw.setContentType("image/tiff");
-			raw.getOutputStream().write(bytes);
-			raw.getOutputStream().flush();
-			raw.getOutputStream().close();
-			return raw;
+
+		get("/getList", (request, response) -> {
+			String user = request.queryParams("user");
+			Session session = Session.findSessionByUserLogin(user);
+			return session.getFilesJSON();
 		});
-		
+
 //		get("tiff", (request, response) -> {
 //			try {
 //		        File file = new File("temp/201600004068.tif");

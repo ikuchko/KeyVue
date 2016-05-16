@@ -1,33 +1,48 @@
 $(function() {
+  var treeViewData;
   $('#login-form').submit(function(event){
     event.preventDefault();
     verifyUser($('#login').val(), $('#password').val(), event);
   });
 
-  var xhr = new XMLHttpRequest();
-  console.log("Start loading");
-  xhr.responseType = 'arraybuffer';
-  xhr.open('GET', "/2016021200.001");
-  xhr.onload = function ( e ) {
-    Tiff.initialize({TOTAL_MEMORY: 133554432 })
-     var tiff = new Tiff({buffer: xhr.response});
-     var canvas = tiff.toCanvas();
-     $(canvas).addClass("tiff-image");
-     $(".scrollbox").append(canvas);
-     console.log("End loading");
-  };
-  xhr.send();
+  if($('#tree').length > 0) {
+    $.get("/getList", {user: $('#userLogin').val()}, function(list) {
+      treeViewData = JSON.parse(list);
+      $('#tree').treeview({data: treeViewData});
+    });
+  }
 
-  $('#tree').treeview({data: getTree()});
+//  var xhr = new XMLHttpRequest();
+//  console.log("Start loading");
+//  xhr.responseType = 'arraybuffer';
+//  xhr.open('GET', "/2016021200.001");
+//  xhr.onload = function ( e ) {
+//    Tiff.initialize({TOTAL_MEMORY: 133554432 })
+//     var tiff = new Tiff({buffer: xhr.response});
+//     var canvas = tiff.toCanvas();
+//     $(canvas).addClass("tiff-image");
+//     $(".scrollbox").append(canvas);
+//     console.log("End loading");
+//  };
+//  xhr.send();
+  
+  $('#button').click(function() {
+    $.get("/getList", {user: $('#userLogin').val()}, function(list) {
+      a = JSON.parse(list);
+      treeViewData[2]["nodes"] = a;
+      $('#tree').treeview({data: treeViewData});
+    });      
+  })
+  
 });
 
 function getTree() {
   var tree = [
     {
-      text: "Parent 1",
+      text: "Firs node 1",
       nodes: [
         {
-          text: "Child 1",
+          text: "WTF 1",
           nodes: [
             {
               text: "Grandchild 1"
@@ -61,9 +76,7 @@ function getTree() {
 function verifyUser(login, password, event) {
   $.get( "/verifyUser", {user: login, pass: password}, function( data ) {
     if (data == "true") {
-      // $.get("/documents", function(documentPageResponse) {
-      //   alert(documentPageResponse);
-      // });
+      userLogin = login;
       event.currentTarget.submit();
     } else {
       $('#auth-error').show();

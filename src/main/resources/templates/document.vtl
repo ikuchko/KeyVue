@@ -1,3 +1,4 @@
+<input id="userLogin" type="hidden" value="$session.getFTPUserLogin()">
 <div class="row">
   <div class="col-md-3">
     <div class="page-title">
@@ -39,8 +40,13 @@
         </tbody>
       </table>
     #end
-    <div id="tree"></div>
+    <div id="tree">
+      <ul class="list-group">
+        <li class="list-group-item node-tree" data-noded="0">HTML node</li>
+      </ul>
+    </div>
   </div>
+  <button type="button" id="button">click</button>
   <div class="col-md-9">
     <h2>Image:</h2>
     <br />
