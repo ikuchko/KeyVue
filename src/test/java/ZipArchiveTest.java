@@ -10,7 +10,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 
 public class ZipArchiveTest {
-	
+
 	@Test
 	public void zip_extracteFilesReturnTrue() {
 		ZipFile zipFile = null;
@@ -24,7 +24,7 @@ public class ZipArchiveTest {
 		ZipArchive zip = new ZipArchive(zipFile, session);
 		assertTrue(zip.extractFiles());
 	}
-	
+
 	@Test
 	public void zip_populatedFileListsSuccessfully() {
 		ZipFile zipFile = null;

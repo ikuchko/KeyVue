@@ -14,12 +14,12 @@ public class ZipArchive {
 	private Session session;
 	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
 	private List<String> txtFiles = new ArrayList<>();
-	
+
 	public ZipArchive(ZipFile zipFile, Session session) {
 		this.zipFile = zipFile;
 		this.DESTINATION_DIRECTORY = "src/main/resources/public/temp/" + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
 	}
-	
+
 	public Boolean extractFiles () {
 		File tempFolder = new File(DESTINATION_DIRECTORY);
 		tempFolder.mkdirs();
@@ -31,15 +31,15 @@ public class ZipArchive {
 	    }
 		return true;
 	}
-	
+
 	public List<String> getTxtFiles() {
 		return txtFiles;
 	}
-	
+
 	public List<List<String>> getTiffFiles() {
 		return tiffFiles;
 	}
-	
+
 	private List<String> getFiles(String type) {
 		List<String> files = new ArrayList<>();
 		File folder = new File(DESTINATION_DIRECTORY);
@@ -55,7 +55,7 @@ public class ZipArchive {
 		}
 		return files;
 	}
-	
+
 	public void readExtractedFiles() {
 		this.txtFiles = getFiles("txt");
 		this.tiffFiles = assambleTiffFiles(getFiles("tif"));
@@ -71,7 +71,7 @@ public class ZipArchive {
 			} else {
 				if (tiffFile.size() > 0) {
 					resultList.add(tiffFile);
-					tiffFile.clear();					
+					tiffFile.clear();
 				}
 				tiffFile.add(files.get(i));
 				fileName = FilenameUtils.getBaseName(files.get(i));
@@ -80,4 +80,3 @@ public class ZipArchive {
 		return resultList;
 	}
 }
-
