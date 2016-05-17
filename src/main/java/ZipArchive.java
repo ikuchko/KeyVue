@@ -11,7 +11,7 @@ import net.lingala.zip4j.core.ZipFile;
 
 public class ZipArchive {
 //	private static String DESTINATION_DIRECTORY;
-	private static String DESTINATION = "src/main/resources/public/temp/";
+	public static String DESTINATION = "src/main/resources/public/temp/";
 //	private ZipFile zipFile;
 //	private Session session;
 //	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
@@ -54,7 +54,9 @@ public class ZipArchive {
 			if (listOfFiles[i].isFile()){
 				if (FilenameUtils.getExtension(listOfFiles[i].getPath()).equals(type) && type.equals("txt")) {
 					files.add(listOfFiles[i].getName());
-				} else if (!FilenameUtils.getExtension(listOfFiles[i].getPath()).equals("txt")){
+				} 
+				
+				if (!(FilenameUtils.getExtension(listOfFiles[i].getPath()).equals("txt")) && !(type.equals("txt"))) {
 					files.add(listOfFiles[i].getName());
 				}
 			}

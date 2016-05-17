@@ -43,35 +43,32 @@ public class ZipArchiveTest {
 	@Test
 	public void zip_returnsListOfTXTFilesIfDirectoryHasBeenExtracted() {
 		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
-		session.setFTPFiles(FTPReader.loadFiles(session));
 		assertTrue(ZipArchive.getFiles("txt", "NHA-20160425.zip", session).size() > 0);
 	}
 	
 	@Test
 	public void zip_returnsListOfDisassembledTIFFiles() {
 		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
-		session.setFTPFiles(FTPReader.loadFiles(session));
-		assertTrue(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session).size() > 0);
+		assertTrue(ZipArchive.getFiles("tif", "NHA-20160425.zip", session).size() > 0);
 	}
 	
 	@Test
 	public void zip_returnsListOfAssembledTIFFiles() {
 		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
-		session.setFTPFiles(FTPReader.loadFiles(session));
-		assertTrue(ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session)).get(0).size() > 0);
+		assertTrue(ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", "NHA-20160425.zip", session)).get(0).size() > 0);
 	}
 	
 	@Test
 	public void zip_AssembledTIFFilesHasBeenProcessedAllFiles() {
 		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
 		session.setFTPFiles(FTPReader.loadFiles(session));
-		List<List<String>> assembledList = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session));
+		List<List<String>> assembledList = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", "NHA-20160425.zip", session));
 		int amount = 0;
 		for (int i=0; i<assembledList.size(); i++) {
 			for (int index=0; index<assembledList.get(i).size(); index++) {
 				amount++;
 			}
 		}
-		assertEquals(amount, ZipArchive.getFiles("tiff", "NHA-20160425.zip", session).size());
+		assertEquals(amount, ZipArchive.getFiles("tif", "NHA-20160425.zip", session).size());
 	}
 }

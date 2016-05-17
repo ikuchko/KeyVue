@@ -1,10 +1,9 @@
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.*;
 
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.regexp.recompile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -78,9 +77,45 @@ public class Session {
 			objectJSON.put("text", ftpFileList.get(i).getName());
 			objectJSON.put("icon", "glyphicon glyphicon-folder-close");
 			objectJSON.put("selectedIcon", "glyphicon glyphicon-folder-open");
+			if (isFolderExtracted(ftpFileList.get(i))) {
+				objectJSON.put("nodes", getFolderContentJSON(ftpFileList.get(i).getName()));
+			}
 			arrayJASON.add(objectJSON);
+			
 		}
 		return arrayJASON;
+	}
+	
+	private Boolean isFolderExtracted(FTPFile ftpFile) {
+		File file = new File(ZipArchive.DESTINATION + ftpUserLogin + "/" + ftpFile.getName());
+		return file.exists();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getFolderContentJSON(String folderName) {
+		JSONArray arrayJSON = new JSONArray();
+		List<String> txtFiles = ZipArchive.getFiles("txt", folderName, this);
+		List<List<String>> tiffFiles = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", folderName, this));
+		for (int i=0; i<txtFiles.size(); i++) {
+			JSONObject objectJSON = new JSONObject();
+			objectJSON.put("text", txtFiles.get(i));
+			objectJSON.put("icon", "glyphicon glyphicon-download");
+			objectJSON.put("type", "txt");
+			arrayJSON.add(objectJSON);
+		}
+		for (int i=0; i<tiffFiles.size(); i++) {
+			JSONObject objectJSON = new JSONObject();
+			objectJSON.put("text", tiffFiles.get(i).get(0));
+			objectJSON.put("icon", "glyphicon glyphicon-picture");
+			objectJSON.put("type", "tif");
+			String files = "";
+			for (int index=0; index<tiffFiles.get(i).size(); index++) {
+				files += tiffFiles.get(i).get(index);
+			}
+			objectJSON.put("files", files);
+			arrayJSON.add(objectJSON);
+		}
+		return arrayJSON;
 	}
 
 	public FTPFile getFTPFileByName(String fileName) {
