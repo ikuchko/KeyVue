@@ -5,27 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.net.ftp.FTPFile;
 
 import net.lingala.zip4j.core.ZipFile;
 
 public class ZipArchive {
-	private static String DESTINATION_DIRECTORY;
+//	private static String DESTINATION_DIRECTORY;
 	private static String DESTINATION = "src/main/resources/public/temp/";
-	private ZipFile zipFile;
-	private Session session;
-	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
-	private List<String> txtFiles = new ArrayList<>();
+//	private ZipFile zipFile;
+//	private Session session;
+//	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
+//	private List<String> txtFiles = new ArrayList<>();
 
-	public ZipArchive(ZipFile zipFile, Session session) {
-		this.zipFile = zipFile;
-		this.DESTINATION_DIRECTORY = "src/main/resources/public/temp/" + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
-	}
+//	public ZipArchive(ZipFile zipFile, Session session) {
+//		this.zipFile = zipFile;
+//		this.DESTINATION_DIRECTORY = "src/main/resources/public/temp/" + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
+//	}
 
-	public Boolean extractFiles () {
-		File tempFolder = new File(DESTINATION_DIRECTORY);
+	public static Boolean extractFiles (ZipFile zipFile, Session session) {
+		String destination = DESTINATION + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
+		File tempFolder = new File(destination);
 		tempFolder.mkdirs();
 		try {
-	         zipFile.extractAll(DESTINATION_DIRECTORY);
+	         zipFile.extractAll(destination);
 	    } catch (ZipException e) {
 	        e.printStackTrace();
 	        return false;
@@ -33,17 +35,20 @@ public class ZipArchive {
 		return true;
 	}
 
-	public List<String> getTxtFiles() {
-		return txtFiles;
-	}
+//	public List<String> getTxtFiles() {
+//		return txtFiles;
+//	}
+//
+//	public List<List<String>> getTiffFiles() {
+//		return tiffFiles;
+//	}
 
-	public List<List<String>> getTiffFiles() {
-		return tiffFiles;
-	}
-
-	private List<String> getFiles(String type, String destination) {
+	public static List<String> getFiles(String type, String searchFolder, Session session) {
 		List<String> files = new ArrayList<>();
-		File folder = new File(DESTINATION_DIRECTORY);
+		File folder = new File(DESTINATION + session.getFTPUserLogin() + "/" + searchFolder);
+		if ((!folder.exists()) || folder.listFiles().length < 1) {
+			extractFiles(FTPReader.getZipFile(session, session.getFTPFileByName(searchFolder)), session);
+		}
 		File[] listOfFiles = folder.listFiles();
 		for (int i=0; i<listOfFiles.length-1; i++) {
 			if (listOfFiles[i].isFile()){
@@ -61,6 +66,7 @@ public class ZipArchive {
 //		this.txtFiles = getFiles("txt");
 //		this.tiffFiles = assambleTiffFiles(getFiles("tif"));
 //	}
+
 
 	public static List<List<String>> assambleTiffFiles(List<String> files) {
 		List<List<String>> resultList = new ArrayList<List<String>>();
@@ -82,13 +88,5 @@ public class ZipArchive {
 			}
 		}
 		return resultList;
-	}
-
-	public static List<String> getTXTFiles(String fileName, Session session) {
-		File file = new File(DESTINATION + session.getFTPUserLogin() + "/" + fileName);
-		if (!file.exists()) {
-//			FTPReader.
-		}
-		return null;
 	}
 }

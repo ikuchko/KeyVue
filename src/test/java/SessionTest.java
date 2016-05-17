@@ -33,6 +33,15 @@ public class SessionTest {
 		assertTrue(session.getFTPFiles().size() > 0);
 		assertTrue(session.getFTPTxtFiles().size() > 0);
 	}
+	
+	@Test 
+	public void sesion_getFTPFileByName() {
+		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
+		List<FTPFile> fileList = FTPReader.loadFiles(session);
+		session.setFTPFiles(fileList);
+		FTPFile ftpFile = session.getFTPFiles().get(2);
+		assertEquals(ftpFile, session.getFTPFileByName(ftpFile.getName()));
+	}
 
 }
 

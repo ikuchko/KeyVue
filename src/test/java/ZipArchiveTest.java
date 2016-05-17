@@ -24,25 +24,7 @@ public class ZipArchiveTest {
 			e.printStackTrace();
 		}
 		Session session = new Session("lps_chespa", "empty");
-		ZipArchive zip = new ZipArchive(zipFile, session);
-		assertTrue(zip.extractFiles());
-	}
-
-	@Test
-	public void zip_populatedFileListsSuccessfully() {
-//		ZipFile zipFile = null;
-//		try {
-//			zipFile = new ZipFile(FTPReader.DESTINATION_DIRECTORY + "lps_nort/NHA-20160425.zip");
-//		} catch (ZipException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		Session session = new Session("lps_chespa", "empty");
-//		ZipArchive zip = new ZipArchive(zipFile, session);
-//		zip.readExtractedFiles();
-//		assertTrue(zip.getTxtFiles().size() > 0);
-//		assertTrue(zip.getTiffFiles().size() > 0);
-//		assertTrue(zip.getTiffFiles().get(0).size() > 0);
+		assertTrue(ZipArchive.extractFiles(zipFile, session));
 	}
 	
 	@Test
@@ -60,13 +42,36 @@ public class ZipArchiveTest {
 	
 	@Test
 	public void zip_returnsListOfTXTFilesIfDirectoryHasBeenExtracted() {
-		Session session = new Session("lps_chespa", "empty");
-		assertTrue(ZipArchive.getTXTFiles("NHA-20160425.zip", session).size() > 0);
+		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
+		session.setFTPFiles(FTPReader.loadFiles(session));
+		assertTrue(ZipArchive.getFiles("txt", "NHA-20160425.zip", session).size() > 0);
 	}
 	
-//	@Test
-//	public void zip_returnsListOfTIFFilesIfDirectoryHasBeenExtracted() {
-//		Session session = new Session("lps_chespa", "empty");
-//		assertTrue(ZipArchive.getTIFFFiles("NHA-20160425.zip", session).size() > 0);
-//	}
+	@Test
+	public void zip_returnsListOfDisassembledTIFFiles() {
+		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
+		session.setFTPFiles(FTPReader.loadFiles(session));
+		assertTrue(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session).size() > 0);
+	}
+	
+	@Test
+	public void zip_returnsListOfAssembledTIFFiles() {
+		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
+		session.setFTPFiles(FTPReader.loadFiles(session));
+		assertTrue(ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session)).get(0).size() > 0);
+	}
+	
+	@Test
+	public void zip_AssembledTIFFilesHasBeenProcessedAllFiles() {
+		Session session = new Session("lps_chespa", "*3D7137A3EE89D2F819F1987C766F6D4471C52F0F");
+		session.setFTPFiles(FTPReader.loadFiles(session));
+		List<List<String>> assembledList = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tiff", "NHA-20160425.zip", session));
+		int amount = 0;
+		for (int i=0; i<assembledList.size(); i++) {
+			for (int index=0; index<assembledList.get(i).size(); index++) {
+				amount++;
+			}
+		}
+		assertEquals(amount, ZipArchive.getFiles("tiff", "NHA-20160425.zip", session).size());
+	}
 }
