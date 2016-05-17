@@ -41,11 +41,8 @@ public class App {
 			model.put("template", "templates/document.vtl");
 			String user = request.queryParams("login");
 			String password = request.queryParams("password");
-			HashMap<String, String> credential = new HashMap<>();
-			credential.put("login", user);
-			credential.put("password", password);
 			Session session = new Session(user, password);
-			session.setFTPFiles(FTPReader.loadFiles(credential));
+			session.setFTPFiles(FTPReader.loadFiles(session));
 			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());

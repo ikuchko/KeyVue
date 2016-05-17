@@ -20,7 +20,7 @@ public class FTPReader {
 	private static FTPClient ftp = new FTPClient();
 	private static String server = "";
 
-	public static List<FTPFile> loadFiles (HashMap<String, String> credential, String path) {
+	public static List<FTPFile> loadFiles (Session session, String path) {
 		Properties properties = new Properties();
 		List<FTPFile> fileList = null;
 		int reply;
@@ -37,7 +37,7 @@ public class FTPReader {
 
 			// Login to the server
 			ftp.enterLocalPassiveMode();
-			if (!ftp.login(credential.get("login"), credential.get("password"))){
+			if (!ftp.login(session.getFTPUserLogin(), session.getFTPUserPassword())){
 				System.out.println("Could not login to server.");
 				return null;
 			}
@@ -61,14 +61,14 @@ public class FTPReader {
 		return fileList;
 	}
 
-	public static List<FTPFile> loadFiles (HashMap<String, String> credential) {
-		return loadFiles(credential, "/");
+	public static List<FTPFile> loadFiles (Session session) {
+		return loadFiles(session, "/");
 	}
 
-	public static ZipFile getZipFile(HashMap<String, String> credential, FTPFile ftpFile) {
+	public static ZipFile getZipFile(Session session, FTPFile ftpFile) {
 		FTPClient ftpClient = new FTPClient();
 		ZipFile zipFile = null;
-		String destination = DESTINATION_DIRECTORY + credential.get("login") + "/";
+		String destination = DESTINATION_DIRECTORY + session.getFTPUserLogin() + "/";
 
 		File file = new File(destination + ftpFile.getName());
 		if (file.exists() && !file.isDirectory() && file.length() > 0) {
@@ -86,7 +86,7 @@ public class FTPReader {
 				FileOutputStream outStream = new FileOutputStream(new File(destination + ftpFile.getName()));
 				ftpClient.connect(server);
 
-				ftpClient.login(credential.get("login"), credential.get("password"));
+				ftpClient.login(session.getFTPUserLogin(), session.getFTPUserPassword());
 				ftpClient.setFileTransferMode(FTPClient.BLOCK_TRANSFER_MODE);
 				ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 

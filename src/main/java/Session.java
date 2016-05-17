@@ -69,11 +69,14 @@ public class Session {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getFilesJSON() {
 		JSONArray arrayJASON = new JSONArray();
 		for (int i=0; i<ftpFileList.size(); i++) {
 			JSONObject objectJSON = new JSONObject();
 			objectJSON.put("text", ftpFileList.get(i).getName());
+			objectJSON.put("icon", "glyphicon glyphicon-folder-close");
+			objectJSON.put("selectedIcon", "glyphicon glyphicon-folder-open");
 			arrayJASON.add(objectJSON);
 		}
 		return arrayJASON;

@@ -10,6 +10,7 @@ import net.lingala.zip4j.core.ZipFile;
 
 public class ZipArchive {
 	private static String DESTINATION_DIRECTORY;
+	private static String DESTINATION = "src/main/resources/public/temp/";
 	private ZipFile zipFile;
 	private Session session;
 	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
@@ -40,7 +41,7 @@ public class ZipArchive {
 		return tiffFiles;
 	}
 
-	private List<String> getFiles(String type) {
+	private List<String> getFiles(String type, String destination) {
 		List<String> files = new ArrayList<>();
 		File folder = new File(DESTINATION_DIRECTORY);
 		File[] listOfFiles = folder.listFiles();
@@ -56,12 +57,12 @@ public class ZipArchive {
 		return files;
 	}
 
-	public void readExtractedFiles() {
-		this.txtFiles = getFiles("txt");
-		this.tiffFiles = assambleTiffFiles(getFiles("tif"));
-	}
+//	public void readExtractedFiles() {
+//		this.txtFiles = getFiles("txt");
+//		this.tiffFiles = assambleTiffFiles(getFiles("tif"));
+//	}
 
-	private List<List<String>> assambleTiffFiles(List<String> files) {
+	public static List<List<String>> assambleTiffFiles(List<String> files) {
 		List<List<String>> resultList = new ArrayList<List<String>>();
 		String fileName = "";
 		List<String> tiffFile = new ArrayList<>();
@@ -70,13 +71,24 @@ public class ZipArchive {
 				tiffFile.add(files.get(i));
 			} else {
 				if (tiffFile.size() > 0) {
-					resultList.add(tiffFile);
+					resultList.add(new ArrayList<>(tiffFile));
 					tiffFile.clear();
 				}
 				tiffFile.add(files.get(i));
 				fileName = FilenameUtils.getBaseName(files.get(i));
 			}
+			if (i == files.size()-1) {
+				resultList.add(new ArrayList<>(tiffFile));
+			}
 		}
 		return resultList;
+	}
+
+	public static List<String> getTXTFiles(String fileName, Session session) {
+		File file = new File(DESTINATION + session.getFTPUserLogin() + "/" + fileName);
+		if (!file.exists()) {
+//			FTPReader.
+		}
+		return null;
 	}
 }
