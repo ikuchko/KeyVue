@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTPFile;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -76,7 +77,11 @@ public class Session {
 			JSONObject objectJSON = new JSONObject();
 			objectJSON.put("text", ftpFileList.get(i).getName());
 			objectJSON.put("icon", "glyphicon glyphicon-folder-close");
-			objectJSON.put("selectedIcon", "glyphicon glyphicon-folder-open");
+			objectJSON.put("type", "dir");
+//			objectJSON.put("selectedIcon", "glyphicon glyphicon-folder-open");
+//			JSONObject stateJSON = new JSONObject();
+//			stateJSON.put("expanded", "false");
+//			objectJSON.put("state", stateJSON);
 			if (isFolderExtracted(ftpFileList.get(i))) {
 				objectJSON.put("nodes", getFolderContentJSON(ftpFileList.get(i).getName()));
 			}
@@ -105,14 +110,16 @@ public class Session {
 		}
 		for (int i=0; i<tiffFiles.size(); i++) {
 			JSONObject objectJSON = new JSONObject();
-			objectJSON.put("text", tiffFiles.get(i).get(0));
+			objectJSON.put("text", FilenameUtils.getBaseName(tiffFiles.get(i).get(0)));
 			objectJSON.put("icon", "glyphicon glyphicon-picture");
 			objectJSON.put("type", "tif");
-			String files = "";
+			JSONArray filesJSONArray = new JSONArray();
 			for (int index=0; index<tiffFiles.get(i).size(); index++) {
-				files += tiffFiles.get(i).get(index);
+				JSONObject imageJSON = new JSONObject();
+				imageJSON.put("imageName", tiffFiles.get(i).get(index));
+				filesJSONArray.add(imageJSON);
 			}
-			objectJSON.put("files", files);
+			objectJSON.put("files", filesJSONArray);
 			arrayJSON.add(objectJSON);
 		}
 		return arrayJSON;

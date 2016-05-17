@@ -5,26 +5,54 @@ $(function() {
     verifyUser($('#login').val(), $('#password').val(), event);
   });
 
+  // Document page checking
   if($('#tree').length > 0) {
+	var userLogin = $('#userLogin').val();
     $.get("/getList", {user: $('#userLogin').val()}, function(list) {
       treeViewData = JSON.parse(list);
-      $('#tree').treeview({data: treeViewData});
+      $('#tree').treeview({
+    	data: treeViewData,
+    	levels: 1,
+    	onNodeSelected: function(event, data) {
+    	  if (data.type === "dir") {
+    		$(this).treeview('toggleNodeExpanded',data.nodeId).treeview('unselectNode',data.nodeId);
+    	  }
+    	  if (data.type === "tif") {
+    		  console.log(data);
+    		  console.log(data.files);
+		    var xhr = new XMLHttpRequest();
+		    console.log("Start loading");
+		    xhr.responseType = 'arraybuffer';
+		    xhr.open('GET', "/temp/" + userLogin + "/CHE-20160426.zip/" + data.files[0].imageName);
+		    xhr.onload = function ( e ) {
+		    Tiff.initialize({TOTAL_MEMORY: 133554432 })
+		      var tiff = new Tiff({buffer: xhr.response});
+		      var canvas = tiff.toCanvas();
+		      $(canvas).addClass("tiff-image");
+		      $(".scrollbox").append(canvas);
+		      console.log("End loading");
+		    };
+		    xhr.send();
+    	  }
+    	}
+      });
     });
   }
-
-//  var xhr = new XMLHttpRequest();
-//  console.log("Start loading");
-//  xhr.responseType = 'arraybuffer';
-//  xhr.open('GET', "/2016021200.001");
-//  xhr.onload = function ( e ) {
-//    Tiff.initialize({TOTAL_MEMORY: 133554432 })
-//     var tiff = new Tiff({buffer: xhr.response});
-//     var canvas = tiff.toCanvas();
-//     $(canvas).addClass("tiff-image");
-//     $(".scrollbox").append(canvas);
-//     console.log("End loading");
-//  };
-//  xhr.send();
+  
+  var xhr = new XMLHttpRequest();
+  console.log("Start loading");
+  xhr.responseType = 'arraybuffer';
+  xhr.open('GET', "/201600004068.tif");
+  xhr.onload = function ( e ) {
+  Tiff.initialize({TOTAL_MEMORY: 133554432 })
+    var tiff = new Tiff({buffer: xhr.response});
+    var canvas = tiff.toCanvas();
+    $(canvas).addClass("tiff-image");
+    $(".scrollbox").append(canvas);
+    console.log("End loading");
+  };
+  xhr.send();
+  
   
   $('#button').click(function() {
     $.get("/getList", {user: $('#userLogin').val()}, function(list) {
