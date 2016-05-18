@@ -52,6 +52,13 @@ public class App {
 			Session session = Session.findSessionByUserLogin(user);
 			return session.getFilesJSON();
 		});
+		
+		get("/getFolderContent", (request, response) -> {
+			String user = request.queryParams("user");
+			String fileName = request.queryParams("fileName");
+			Session session = Session.findSessionByUserLogin(user);
+			return session.getFolderContentJSON(fileName);
+		});
 
 //		get("tiff", (request, response) -> {
 //			try {
