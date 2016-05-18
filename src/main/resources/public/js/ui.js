@@ -32,6 +32,7 @@ $(function() {
         	  if (data.type === "tif") {
             var parentName = $('#tree').treeview('getParent', data).text;
     		    var xhr = new XMLHttpRequest();
+            $(".tiff-image").remove();
             $('#progress-bar').showV();
     		    console.log("Start loading");
     		    xhr.responseType = 'arraybuffer';
