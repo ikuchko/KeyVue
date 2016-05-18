@@ -18,6 +18,10 @@ a.task-board {
   display: none;
 }
 
+#progress-bar {
+  visibility: hidden;
+}
+
 .adon-width {
   width: 30px;
 }
