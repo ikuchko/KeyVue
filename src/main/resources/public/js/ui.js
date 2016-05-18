@@ -32,7 +32,6 @@ $(function() {
         	  if (data.type === "tif") {
             var parentName = $('#tree').treeview('getParent', data).text;
     		    var xhr = new XMLHttpRequest();
-            $(".tiff-image").remove();
             $('#progress-bar').showV();
     		    console.log("Start loading");
     		    xhr.responseType = 'arraybuffer';
@@ -40,6 +39,7 @@ $(function() {
     		    xhr.onload = function ( e ) {
       		    Tiff.initialize({TOTAL_MEMORY: 133554432 })
     		      var tiff = new Tiff({buffer: xhr.response});
+              $(".tiff-image").remove();
     		      var canvas = tiff.toCanvas();
     		      $(canvas).addClass("tiff-image");
     		      $(".scrollbox").append(canvas);
@@ -64,15 +64,6 @@ $(function() {
       };
     });
   }
-
-  $('#button').click(function() {
-    $.get("/getList", {user: $('#userLogin').val()}, function(list) {
-      a = JSON.parse(list);
-      treeViewData[2]["nodes"] = a;
-      $('#tree').treeview({data: treeViewData});
-      $('#progress-bar').hideV();
-    });
-  })
 
 });
 
