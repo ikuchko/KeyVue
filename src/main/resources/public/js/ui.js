@@ -1,6 +1,7 @@
 var imageList = [];
 var parentNode = "";
 var currentNode = "";
+var page = 0;
 var alpha = 1; //amount of not image files to subtract from nodeId
 
 $(function() {
@@ -32,7 +33,7 @@ $(function() {
         	  if (data.type === "dir") {
               $('#progress-bar').showV();
               if (data.nodes) {
-                $(this).treeview('toggleNodeExpanded',data.nodeId).treeview('unselectNode',data.nodeId);
+                $(this).treeview('toggleNodeExpanded',data.nodeId).treeview('unselectNode', data.nodeId);
                 updateNavState({init: true});
                 $('#progress-bar').hideV();
               } else {
@@ -52,33 +53,7 @@ $(function() {
               currentNode = data;
               updateNavState({node: data});
               var parentName = $('#tree').treeview('getParent', data).text;
-      		    var xhr = new XMLHttpRequest();
-              $('#progress-bar').showV();
-      		    console.log("Start loading");
-      		    xhr.responseType = 'arraybuffer';
-      		    xhr.open('get', "/temp/" + userLogin + "/" + parentName + "/" + data.files[0].imageName);
-      		    xhr.onload = function ( e ) {
-        		    Tiff.initialize({TOTAL_MEMORY: 133554432 })
-      		      var tiff = new Tiff({buffer: xhr.response});
-                $(".tiff-image").remove();
-      		      var canvas = tiff.toCanvas();
-      		      $(canvas).addClass("tiff-image");
-      		      $(".scrollbox").append(canvas);
-                $('#progress-bar').hideV();
-      		      console.log("End loading");
-      		    };
-              xhr.onerror = function ( e ) {
-                $('#progress-bar').hideV();
-                console.log("Error was catched during loading image");
-              };
-              xhr.onreadystatuschange = function () {
-                debugger;
-                if (xhr.readyState == 4 && xhr.status == 400) {
-                  $('#progress-bar').hideV();
-                  console.log("Error was catched during loading image");
-                };
-              }
-      		    xhr.send();
+              loadImage(userLogin, parentName, data.files[0].imageName)
         	  }
         	}
         });
@@ -87,16 +62,34 @@ $(function() {
   }
 
   //navbar event handler
-  $('button').on("click", function() {
-    if ($(this).attr('id') === "image-up") {
-      var nextNode = $('#tree').treeview('getNode', currentNode.nodeId + 1);
-    } else if ($(this).attr('id') === "image-down") {
-      var nextNode = $('#tree').treeview('getNode', currentNode.nodeId - 1);
-    }
+  $('#image-up').on("click", function() {
+    var nextNode = $('#tree').treeview('getNode', currentNode.nodeId + 1);
     if (nextNode.type === "tif") {
+      $('#progress-bar').showV();
       $('#tree').treeview('selectNode', [ nextNode, { silent: false } ]);
     }
-  })
+  });
+  $('#image-down').on("click", function() {
+    var nextNode = $('#tree').treeview('getNode', currentNode.nodeId - 1);
+    if (nextNode.type === "tif") {
+      $('#progress-bar').showV();
+      $('#tree').treeview('selectNode', [ nextNode, { silent: false } ]);
+    }
+  });
+  $('#page-next').on("click", function() {
+    var userLogin = $('#userLogin').val();
+    var parentName = $('#tree').treeview('getParent', currentNode).text;
+    $('#progress-bar').showV();
+    page++;
+    loadImage(userLogin, parentName, currentNode.files[page].imageName);
+  });
+  $('#page-previous').on("click", function() {
+    var userLogin = $('#userLogin').val();
+    var parentName = $('#tree').treeview('getParent', currentNode).text;
+    $('#progress-bar').showV();
+    page--;
+    loadImage(userLogin, parentName, currentNode.files[page].imageName);
+  });
 
 });
 
@@ -113,20 +106,25 @@ function verifyUser(login, password, event) {
 
 // options.init - make navbar clear and buttons disabled
 function updateNavState(options) {
+  page = 0;
+  $('#pageLabel').hideV();
   if (options.init) {
     imageList = [];
     parentNode = "";
     currentNode = "";
+
     alpha = 1;
     $('#image-up').disable(true);
     $('#image-down').disable(true);
     $('#previousImage').hideV();
     $('#currentImage').hideV();
     $('#nextImage').hideV();
+    $('#page-next').disable(true);
+    $('#page-previous').disable(true);
   } else {
     var node = options.node;
     if ($('#tree').treeview('getParent', node).text !== parentNode.text) {
-      imageList = getImages(node);
+      imageList = getImageList(node);
     }
     // if doucemnt first or last in the list - disable
     $('#currentImage').text(node.text);
@@ -159,7 +157,38 @@ function getNode(currentNode, position) {
   }
 }
 
-function getImages(node) {
+function loadImage(userLogin, parentName, fileName) {
+  var xhr = new XMLHttpRequest();
+  $('#progress-bar').showV();
+  console.log("Start loading");
+  xhr.responseType = 'arraybuffer';
+  xhr.open('get', "/temp/" + userLogin + "/" + parentName + "/" + fileName);
+  xhr.onload = function ( e ) {
+    Tiff.initialize({TOTAL_MEMORY: 133554432 })
+    var tiff = new Tiff({buffer: xhr.response});
+    $(".tiff-image").remove();
+    var canvas = tiff.toCanvas();
+    $(canvas).addClass("tiff-image");
+    $(".scrollbox").append(canvas);
+    $('#progress-bar').hideV();
+    updatePageState();
+    console.log("End loading");
+  };
+  xhr.onerror = function ( e ) {
+    $('#progress-bar').hideV();
+    console.log("Error was catched during loading image");
+  };
+  xhr.onreadystatuschange = function () {
+    debugger;
+    if (xhr.readyState == 4 && xhr.status == 400) {
+      $('#progress-bar').hideV();
+      console.log("Error was catched during loading image");
+    };
+  }
+  xhr.send();
+}
+
+function getImageList(node) {
   parentNode = $('#tree').treeview('getParent', node);
   var result = [];
   var counter = 0;
@@ -173,6 +202,21 @@ function getImages(node) {
     }
   }
   return result;
+}
+
+function updatePageState() {
+  $('#pageLabel').showV();
+  $('#pageLabel').text("PAGE " + (page + 1) + " OF " + currentNode.files.length);
+  if (page === 0) {
+    $('#page-previous').disable(true);
+  } else {
+    $('#page-previous').disable(false);
+  }
+  if (page === currentNode.files.length - 1) {
+    $('#page-next').disable(true);
+  } else {
+    $('#page-next').disable(false);
+  }
 }
 
 jQuery.fn.showV = function() {

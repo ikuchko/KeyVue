@@ -18,27 +18,43 @@
 
     <!-- Navbar -->
     <div class="navigation">
-      <ul class="nav nav-pills">
-        <li role="presentation" class="nav--button-image">
-          <ul class="nav nav-pills nav-stacked">
-            <li role="presentation">
-              <button type="button" class="navigation-button" id="image-up"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
+      <div class="row">
+        <div class="col-md-6 vcenter" >
+          <ul class="nav nav-pills">
+            <li role="presentation" class="nav--button-image">
+              <ul class="nav nav-pills nav-stacked">
+                <li role="presentation">
+                  <button type="button" class="navigation-button" id="image-up"><span class="glyphicon glyphicon-triangle-top span-image" aria-hidden="true"></span></button>
+                </li>
+                <li role="presentation">
+                  <button type="button" class="navigation-button" id="image-down"><span class="glyphicon glyphicon-triangle-bottom span-image" aria-hidden="true"></span></button>
+                </li>
+              </ul>
             </li>
             <li role="presentation">
-              <button type="button" class="navigation-button" id="image-down"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
+              <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><h5 class="navigation-text-sm" id="nextImage"></h5></li>
+                <li role="presentation"><h5 class="navigation-text-normal" id="currentImage"></h5></li>
+                <li role="presentation"><h5 class="navigation-text-sm" id="previousImage"></h5></li>
+              </ul>
             </li>
           </ul>
-        </li>
+        </div><!--
+        --><div class="col-md-6 vcenter">
+              <ul class="nav nav-pills" style="float: right;">
+                <li role="presentation">
+                  <h5 class="navigation-text-sm" id="pageLabel"></h5>
+                </li>
+                <li role="presentation">
+                  <button type="button" class="navigation-button-page" id="page-previous"><span class="glyphicon glyphicon-triangle-left span-page" aria-hidden="true"></span></button>
+                </li>
+                <li role="presentation">
+                  <button type="button" class="navigation-button-page" id="page-next"><span class="glyphicon glyphicon-triangle-right span-page" aria-hidden="true"></span></button>
+                </li>
+              </ul>
+        </div>
+      </div>
 
-        <li role="presentation">
-          <ul class="nav nav-pills nav-stacked">
-            <li role="presentation"><h5 class="navigation-text-sm" id="nextImage"></h5></li>
-            <li role="presentation"><h5 class="navigation-text-normal" id="currentImage"></h5></li>
-            <li role="presentation"><h5 class="navigation-text-sm" id="previousImage"></h5></li>
-          </ul>
-        </li>
-
-      </ul>
     </div>
 
     <div class="scrollbox">

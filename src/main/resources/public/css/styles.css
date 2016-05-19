@@ -34,8 +34,14 @@ a.task-board {
   color: white;
 }
 
-.navigation span {
+.span-image {
+  font-size: 14px;
+  color: #DADADA;
+}
+
+.span-page {
   font-size: 20px;
+  color: #DADADA;
 }
 
 .nav--button-image {
@@ -43,7 +49,17 @@ a.task-board {
 }
 
 .navigation-button {
-  border-radius: 3px;
+  padding: 5px 10px 3px 10px;
+  border-radius: 7px;
+  background-color: #202020;
+  box-shadow: inset 0 0 0 1px #000000,0 5px 15px #000000;
+  border: none;
+  text-shadow: 0 0 3px #fff;
+}
+
+.navigation-button-page {
+  padding: 10px 7px 10px 7px;
+  border-radius: 7px;
   background-color: #202020;
   box-shadow: inset 0 0 0 1px #000000,0 5px 15px #000000;
   border: none;
@@ -59,7 +75,25 @@ a.task-board {
 .navigation-text-normal {
   margin: 5px 0px 5px 0px;
   font-size: 15px;
+  color: #DADADA;
 }
+
+#pageLabel {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+
+
+
+
 
 .adon-width {
   width: 30px;
