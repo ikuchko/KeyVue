@@ -24,8 +24,11 @@ $(function() {
               } else {
                 $.get("/getFolderContent", {user: userLogin, fileName: data.text}, function(response) {
                   console.log(JSON.parse(response));
-                  treeViewData[data.nodeId].nodes = JSON.parse(response);
-                  renderTreeview(treeViewData);
+                  $('#tree').data('treeview').addNode(data.nodeId, JSON.parse(response));
+                  // $('#tree').treeview('addNode', data.nodeId, JSON.parse(response));
+                  // debugger;
+                  // treeViewData[data.nodeId].nodes = JSON.parse(response);
+                  // renderTreeview(treeViewData);
                   $('#tree').treeview('expandNode', [ data.nodeId, { levels: 2, silent: true } ]);
                   $('#progress-bar').hideV();
                 });
