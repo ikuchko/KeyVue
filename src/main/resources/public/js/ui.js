@@ -1,7 +1,21 @@
+var imageList = [];
+var parentNode = "";
+var currentNode = "";
+var alpha = 1; //amount of not image files to subtract from nodeId
+
 $(function() {
   $('#login-form').submit(function(event){
     event.preventDefault();
     verifyUser($('#login').val(), $('#password').val(), event);
+  });
+
+  //disabling buttons
+  jQuery.fn.extend({
+    disable: function(state) {
+      return this.each(function() {
+        this.disabled = state;
+      });
+    }
   });
 
   // Document page checking
@@ -19,7 +33,7 @@ $(function() {
               $('#progress-bar').showV();
               if (data.nodes) {
                 $(this).treeview('toggleNodeExpanded',data.nodeId).treeview('unselectNode',data.nodeId);
-                updateNavState(node, page, 0)
+                updateNavState({init: true});
                 $('#progress-bar').hideV();
               } else {
                 $.get("/getFolderContent", {user: userLogin, fileName: data.text}, function(response) {
@@ -35,6 +49,7 @@ $(function() {
               }
         	  }
         	  if (data.type === "tif") {
+              currentNode = data;
               updateNavState({node: data});
               var parentName = $('#tree').treeview('getParent', data).text;
       		    var xhr = new XMLHttpRequest();
@@ -71,6 +86,18 @@ $(function() {
     });
   }
 
+  //navbar event handler
+  $('button').on("click", function() {
+    if ($(this).attr('id') === "image-up") {
+      var nextNode = $('#tree').treeview('getNode', currentNode.nodeId + 1);
+    } else if ($(this).attr('id') === "image-down") {
+      var nextNode = $('#tree').treeview('getNode', currentNode.nodeId - 1);
+    }
+    if (nextNode.type === "tif") {
+      $('#tree').treeview('selectNode', [ nextNode, { silent: false } ]);
+    }
+  })
+
 });
 
 function verifyUser(login, password, event) {
@@ -84,63 +111,62 @@ function verifyUser(login, password, event) {
   });
 }
 
-var imageList = [];
-var parentNodeName = "";
-var alpha = 1; //amount of not image files to subtract from nodeId
 // options.init - make navbar clear and buttons disabled
 function updateNavState(options) {
   if (options.init) {
-    $('#image-up').addClass('disabled');
-    $('#image-down').addClass('disabled');
-    $('#previousImage').val("");
-    $('#currentImage').val("");
-    $('#nextImage').val("");
+    imageList = [];
+    parentNode = "";
+    currentNode = "";
+    alpha = 1;
+    $('#image-up').disable(true);
+    $('#image-down').disable(true);
+    $('#previousImage').hideV();
+    $('#currentImage').hideV();
+    $('#nextImage').hideV();
   } else {
     var node = options.node;
-    console.log("node:");
-    console.log(node);
-    console.log($('#tree').treeview('getParent', node).text);
-    console.log(parentNodeName);
-    if ($('#tree').treeview('getParent', node).text !== parentNodeName) {
+    if ($('#tree').treeview('getParent', node).text !== parentNode.text) {
       imageList = getImages(node);
     }
-    debugger;
-    // var nodeId = node.nodeId - alpha;
-    $('#currentImage').val(node.text);
-    if (node.text === imageList[0].text) {
-      $('#image-down').addClass('disabled');
-      $('#image-up').removeClass('disabled');
-      $('#previousImage').val("");
-    } else if (imageList.length > 1) {
-      if (node.text === imageList[imageList.length-1].text) {
-        $('#image-up').addClass('disabled');
-        $('#image-down').removeClass('disabled');
-        $('#nextImage').val("");
-      }
-    }{
-      $('#image-down').removeClass('disabled');
-      $('#previousImage').val(imageList[nodeId - 1].text);
+    // if doucemnt first or last in the list - disable
+    $('#currentImage').text(node.text);
+    $('#currentImage').showV();
+    if (node.nodeId === imageList[0].nodeId) {
+      $('#image-down').disable(true);
+      $('#previousImage').hideV();
+    } else {
+      $('#image-down').disable(false);
+      $('#previousImage').text(getNode(node, -1).text);
+      $('#previousImage').showV();
+    }
+    if (node.nodeId === imageList[imageList.length-1].nodeId) {
+      $('#image-up').disable(true);
+      $('#nextImage').hideV();
+    } else {
+      $('#image-up').disable(false);
+      $('#nextImage').text(getNode(node, 1).text);
+      $('#nextImage').showV();
     }
 
-    if (nodeId === imageList.length - 1) {
-      $('#image-up').addClass('disabled');
-      $('#nextImage').val("");
-    } else {
-      debugger;
-      $('#image-up').removeClass('disabled');
-      $('#nextImage').val(imageList[nodeId + 1].text);
+  }
+}
+
+function getNode(currentNode, position) {
+  for (var i=0; i<imageList.length; i++) {
+    if (imageList[i].nodeId === currentNode.nodeId) {
+      return imageList[i + position];
     }
   }
 }
 
 function getImages(node) {
-  parentNodeName = $('#tree').treeview('getParent', node);
+  parentNode = $('#tree').treeview('getParent', node);
   var result = [];
   var counter = 0;
   alpha = 1;
-  for (var i=0; i<parentNodeName.nodes.length; i++) {
-    if (parentNodeName.nodes[i].type === "tif") {
-      result[counter] = parentNodeName.nodes[i];
+  for (var i=0; i<parentNode.nodes.length; i++) {
+    if (parentNode.nodes[i].type === "tif") {
+      result[counter] = parentNode.nodes[i];
       counter++;
     } else {
       alpha++;
