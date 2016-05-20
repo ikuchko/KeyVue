@@ -172,6 +172,16 @@ function loadImage(userLogin, parentName, fileName) {
     $(canvas).addClass("tiff-image");
     $(".scrollbox").append(canvas);
     setImageZooming(canvas.toDataURL());
+
+    var targetNode = document.querySelector (".tiff-image");
+    triggerMouseEvent (targetNode, "mousedown");
+    triggerMouseEvent (targetNode, "mouseup");
+    function triggerMouseEvent (node, eventType) {
+      var clickEvent = document.createEvent ('MouseEvents');
+      clickEvent.initEvent (eventType, true, true);
+      node.dispatchEvent (clickEvent);
+  }
+
     $('#progress-bar').hideV();
     updatePageState();
     console.log("End loading");
@@ -236,9 +246,12 @@ jQuery.fn.hideV = function() {
 
 function setImageZooming(imageSource) {
   var canvas = document.getElementsByTagName('canvas')[0];
-  canvas.width = 800; canvas.height = 600;
+  // canvas.width = 1000; canvas.height = 700;
+  canvas.width = 3060; canvas.height = 3990;
+  console.log(canvas.width);
+  console.log(canvas.height);
   var gkhead = new Image;
-  var ball   = new Image;
+  //var ball   = new Image;
   var ctx = canvas.getContext('2d');
   trackTransforms(ctx);
   function redraw(){
@@ -289,17 +302,18 @@ function setImageZooming(imageSource) {
     // ctx.stroke();
     ctx.restore();
 
-    ctx.drawImage(ball,379,233,40,40);
-    ctx.drawImage(ball,454,239,40,40);
-    ctx.drawImage(ball,310,295,20,20);
-    ctx.drawImage(ball,314.5,296.5,5,5);
-    ctx.drawImage(ball,319,297.2,5,5);
+    // ctx.drawImage(ball,379,233,40,40);
+    // ctx.drawImage(ball,454,239,40,40);
+    // ctx.drawImage(ball,310,295,20,20);
+    // ctx.drawImage(ball,314.5,296.5,5,5);
+    // ctx.drawImage(ball,319,297.2,5,5);
   }
   redraw();
 
   var lastX=canvas.width/2, lastY=canvas.height/2;
   var dragStart,dragged;
   canvas.addEventListener('mousedown',function(evt){
+    console.log(evt);
     document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
     lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
     lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
@@ -307,12 +321,13 @@ function setImageZooming(imageSource) {
     dragged = false;
   },false);
   canvas.addEventListener('mousemove',function(evt){
+    console.log("moved");
     lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
     lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
     dragged = true;
     if (dragStart){
       var pt = ctx.transformedPoint(lastX,lastY);
-      ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
+      ctx.translate((pt.x-dragStart.x)*1.1,(pt.y-dragStart.y)*1.1);
       redraw();
     }
   },false);
@@ -331,6 +346,9 @@ function setImageZooming(imageSource) {
     redraw();
   }
 
+  // scaleFactor = 3;
+  // zoom(-1);
+
   var handleScroll = function(evt){
     var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
     if (delta) zoom(delta);
@@ -340,6 +358,7 @@ function setImageZooming(imageSource) {
   canvas.addEventListener('mousewheel',handleScroll,false);
 
   gkhead.src = imageSource;
+  // gkhead.src = 'http://phrogz.net/tmp/alphaball.png';
   // ball.src   = 'http://phrogz.net/tmp/alphaball.png';
 
   // Adds ctx.getTransform() - returns an SVGMatrix
