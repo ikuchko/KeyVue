@@ -7,6 +7,44 @@ var alpha = 1; //amount of not image files to subtract from nodeId
 $(function() {
   $('body').on('contextmenu', '.tiff-image', function(e){ return false; });
 
+  $(window).keypress(function(e) {
+    var ev = e || window.event;
+    var key = ev.keyCode || ev.which;
+    zoomImage(key);
+  });
+  $(window).keydown(function(e) {
+    var ev = e || window.event;
+    var key = ev.keyCode || ev.which;
+    if (ev.ctrlKey) {
+      switch (key) {
+        case 37: $('#page-previous').click();
+          break;
+        case 39: $('#page-next').click();
+          break;
+        case 38: $('#image-up').click();
+          break;
+        case 40: $('#image-down').click();
+          break;
+      }
+    } else {
+      var delta = 50;
+      switch (key) {
+        case 37: moveImage(-delta, 0);
+        e.preventDefault();
+        break;
+        case 39: moveImage(delta, 0);
+        e.preventDefault();
+        break;
+        case 38: moveImage(0, -delta);
+        e.preventDefault();
+        break;
+        case 40: moveImage(0, delta);
+        e.preventDefault();
+        break;
+      }
+    };
+  });
+
   $('#login-form').submit(function(event){
     event.preventDefault();
     verifyUser($('#login').val(), $('#password').val(), event);
@@ -78,20 +116,23 @@ $(function() {
     }
   });
   $('#page-next').on("click", function() {
-    var userLogin = $('#userLogin').val();
-    var parentName = $('#tree').treeview('getParent', currentNode).text;
-    $('#progress-bar').showV();
-    page++;
-    loadImage(userLogin, parentName, currentNode.files[page].imageName);
+    if (currentNode) {
+      var userLogin = $('#userLogin').val();
+      var parentName = $('#tree').treeview('getParent', currentNode).text;
+      $('#progress-bar').showV();
+      page++;
+      loadImage(userLogin, parentName, currentNode.files[page].imageName);
+    }
   });
   $('#page-previous').on("click", function() {
-    var userLogin = $('#userLogin').val();
-    var parentName = $('#tree').treeview('getParent', currentNode).text;
-    $('#progress-bar').showV();
-    page--;
-    loadImage(userLogin, parentName, currentNode.files[page].imageName);
+    if (currentNode) {
+      var userLogin = $('#userLogin').val();
+      var parentName = $('#tree').treeview('getParent', currentNode).text;
+      $('#progress-bar').showV();
+      page--;
+      loadImage(userLogin, parentName, currentNode.files[page].imageName);
+    }
   });
-
 });
 
 function verifyUser(login, password, event) {
@@ -173,6 +214,7 @@ function loadImage(userLogin, parentName, fileName) {
     $(".scrollbox").append(canvas);
     setImageZooming(canvas.toDataURL());
 
+    moveImage();
     var targetNode = document.querySelector (".tiff-image");
     triggerMouseEvent (targetNode, "mousedown");
     triggerMouseEvent (targetNode, "mouseup");
@@ -180,7 +222,8 @@ function loadImage(userLogin, parentName, fileName) {
       var clickEvent = document.createEvent ('MouseEvents');
       clickEvent.initEvent (eventType, true, true);
       node.dispatchEvent (clickEvent);
-  }
+    }
+
 
     $('#progress-bar').hideV();
     updatePageState();
@@ -239,17 +282,37 @@ jQuery.fn.hideV = function() {
     this.css('visibility', 'hidden');
 }
 
+function moveImage(x,y) {
+  var canvas = document.getElementsByTagName('canvas')[0];
+  if (canvas) {
+    var ctx = canvas.getContext('2d');
+    ctx.translate(x,y);
+    var event = new Event('redraw');
+    canvas.dispatchEvent(event);
+  }
+}
 
-
-
+function zoomImage(key) {
+  var canvas = document.getElementsByTagName('canvas')[0];
+  if (canvas && (key == 43 || key == 45)) {
+    var ctx = canvas.getContext('2d');
+    var event = new CustomEvent('zoom',
+      {
+        detail: {
+          clicks: (key === 43 ? 1 : -1),
+        },
+        bubbles: true,
+  		  cancelable: true
+      });
+    canvas.dispatchEvent(event);
+  }
+}
 
 
 function setImageZooming(imageSource) {
   var canvas = document.getElementsByTagName('canvas')[0];
-  canvas.width = 800; canvas.height = 700;
-  // canvas.width = 3060; canvas.height = 3990;
-  var gkhead = new Image;
-  //var ball   = new Image;
+  canvas.width = 800; canvas.height = 1000;
+  var tiffImage = new Image;
   var ctx = canvas.getContext('2d');
   trackTransforms(ctx);
   function redraw(){
@@ -259,19 +322,12 @@ function setImageZooming(imageSource) {
     var p2 = ctx.transformedPoint(canvas.width, canvas.height);
     ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
-    // Alternatively:
-    // ctx.save();
-    // ctx.setTransform(1,0,0,1,0,0);
-    // ctx.clearRect(0,0,canvas.width,canvas.height);
-    // ctx.restore();
-
-    ctx.drawImage(gkhead,0,0);
+    ctx.drawImage(tiffImage,0,0);
 
     ctx.beginPath();
     ctx.lineWidth = 6;
     ctx.moveTo(399,250);
     ctx.lineTo(474,256);
-    // ctx.stroke();
 
     ctx.save();
     ctx.translate(4,2);
@@ -279,7 +335,6 @@ function setImageZooming(imageSource) {
     ctx.lineWidth = 1;
     ctx.moveTo(436,253);
     ctx.lineTo(437.5,233);
-    // ctx.stroke();
 
     ctx.save();
     ctx.translate(438.5,223);
@@ -292,20 +347,12 @@ function setImageZooming(imageSource) {
       ctx.lineTo(10,0);
       ctx.rotate(-6*i*Math.PI/180);
     }
-    // ctx.stroke();
     ctx.restore();
 
     ctx.beginPath();
     ctx.lineWidth = 0.2;
     ctx.arc(438.5,223,10,0,Math.PI*2);
-    // ctx.stroke();
     ctx.restore();
-
-    // ctx.drawImage(ball,379,233,40,40);
-    // ctx.drawImage(ball,454,239,40,40);
-    // ctx.drawImage(ball,310,295,20,20);
-    // ctx.drawImage(ball,314.5,296.5,5,5);
-    // ctx.drawImage(ball,319,297.2,5,5);
   }
   redraw();
 
@@ -333,6 +380,12 @@ function setImageZooming(imageSource) {
     dragStart = null;
     if (!dragged) zoom(evt.button === 2 ? -1 : 1 );
   },false);
+  canvas.addEventListener('redraw',function(){
+    redraw();
+  },false);
+  canvas.addEventListener('zoom',function(evt){
+    zoom(evt.detail.clicks);
+  },false);
 
   var scaleFactor = 1.1;
   var zoom = function(clicks){
@@ -346,17 +399,12 @@ function setImageZooming(imageSource) {
 
   var resizeImage = function() {
     var pt = ctx.transformedPoint(lastX,lastY);
-    // ctx.translate(pt.x,pt.y);
     var factor = 0.3;
     ctx.scale(factor,factor);
-    // ctx.translate(-pt.x,-pt.y);
-    // ctx.translate(-pt.x,-pt.y);
+    ctx.translate(-200,0);
     redraw();
   }
   resizeImage();
-
-  // scaleFactor = 3;
-  // zoom(-1);
 
   var handleScroll = function(evt){
     var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
@@ -366,8 +414,8 @@ function setImageZooming(imageSource) {
   canvas.addEventListener('DOMMouseScroll',handleScroll,false);
   canvas.addEventListener('mousewheel',handleScroll,false);
 
-  gkhead.src = imageSource;
-  // gkhead.src = 'http://phrogz.net/tmp/alphaball.png';
+  tiffImage.src = imageSource;
+  // tiffImage.src = 'http://phrogz.net/tmp/alphaball.png';
   // ball.src   = 'http://phrogz.net/tmp/alphaball.png';
 
   // Adds ctx.getTransform() - returns an SVGMatrix
