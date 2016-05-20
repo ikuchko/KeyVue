@@ -5,6 +5,8 @@ var page = 0;
 var alpha = 1; //amount of not image files to subtract from nodeId
 
 $(function() {
+  $('body').on('contextmenu', '.tiff-image', function(e){ return false; });
+
   $('#login-form').submit(function(event){
     event.preventDefault();
     verifyUser($('#login').val(), $('#password').val(), event);
@@ -38,7 +40,6 @@ $(function() {
                 $('#progress-bar').hideV();
               } else {
                 $.get("/getFolderContent", {user: userLogin, fileName: data.text}, function(response) {
-                  console.log(JSON.parse(response));
                   $('#tree').data('treeview').addNode(data.nodeId, JSON.parse(response));
                   // $('#tree').treeview('addNode', data.nodeId, JSON.parse(response));
 
@@ -166,7 +167,6 @@ function loadImage(userLogin, parentName, fileName) {
   xhr.onload = function ( e ) {
     Tiff.initialize({TOTAL_MEMORY: 133554432 })
     var tiff = new Tiff({buffer: xhr.response});
-    console.log(tiff);
     $(".tiff-image").remove();
     var canvas = tiff.toCanvas();
     $(canvas).addClass("tiff-image");
@@ -246,10 +246,8 @@ jQuery.fn.hideV = function() {
 
 function setImageZooming(imageSource) {
   var canvas = document.getElementsByTagName('canvas')[0];
-  // canvas.width = 1000; canvas.height = 700;
-  canvas.width = 3060; canvas.height = 3990;
-  console.log(canvas.width);
-  console.log(canvas.height);
+  canvas.width = 800; canvas.height = 700;
+  // canvas.width = 3060; canvas.height = 3990;
   var gkhead = new Image;
   //var ball   = new Image;
   var ctx = canvas.getContext('2d');
@@ -257,7 +255,8 @@ function setImageZooming(imageSource) {
   function redraw(){
     // Clear the entire canvas
     var p1 = ctx.transformedPoint(0,0);
-    var p2 = ctx.transformedPoint(canvas.width,canvas.height);
+    // var p2 = ctx.transformedPoint(canvas.width,canvas.height);
+    var p2 = ctx.transformedPoint(canvas.width, canvas.height);
     ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
     // Alternatively:
@@ -266,7 +265,7 @@ function setImageZooming(imageSource) {
     // ctx.clearRect(0,0,canvas.width,canvas.height);
     // ctx.restore();
 
-    ctx.drawImage(gkhead,200,50);
+    ctx.drawImage(gkhead,0,0);
 
     ctx.beginPath();
     ctx.lineWidth = 6;
@@ -313,27 +312,26 @@ function setImageZooming(imageSource) {
   var lastX=canvas.width/2, lastY=canvas.height/2;
   var dragStart,dragged;
   canvas.addEventListener('mousedown',function(evt){
-    console.log(evt);
     document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
     lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
     lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+
     dragStart = ctx.transformedPoint(lastX,lastY);
     dragged = false;
   },false);
   canvas.addEventListener('mousemove',function(evt){
-    console.log("moved");
     lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
     lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
     dragged = true;
     if (dragStart){
       var pt = ctx.transformedPoint(lastX,lastY);
-      ctx.translate((pt.x-dragStart.x)*1.1,(pt.y-dragStart.y)*1.1);
+      ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
       redraw();
     }
   },false);
   canvas.addEventListener('mouseup',function(evt){
     dragStart = null;
-    if (!dragged) zoom(evt.shiftKey ? -1 : 1 );
+    if (!dragged) zoom(evt.button === 2 ? -1 : 1 );
   },false);
 
   var scaleFactor = 1.1;
@@ -345,6 +343,17 @@ function setImageZooming(imageSource) {
     ctx.translate(-pt.x,-pt.y);
     redraw();
   }
+
+  var resizeImage = function() {
+    var pt = ctx.transformedPoint(lastX,lastY);
+    // ctx.translate(pt.x,pt.y);
+    var factor = 0.3;
+    ctx.scale(factor,factor);
+    // ctx.translate(-pt.x,-pt.y);
+    // ctx.translate(-pt.x,-pt.y);
+    redraw();
+  }
+  resizeImage();
 
   // scaleFactor = 3;
   // zoom(-1);
