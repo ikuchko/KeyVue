@@ -7,44 +7,6 @@ var alpha = 1; //amount of not image files to subtract from nodeId
 $(function() {
   $('body').on('contextmenu', '.tiff-image', function(e){ return false; });
 
-  $(window).keypress(function(e) {
-    var ev = e || window.event;
-    var key = ev.keyCode || ev.which;
-    zoomImage(key);
-  });
-  $(window).keydown(function(e) {
-    var ev = e || window.event;
-    var key = ev.keyCode || ev.which;
-    if (ev.ctrlKey) {
-      switch (key) {
-        case 37: $('#page-previous').click();
-          break;
-        case 39: $('#page-next').click();
-          break;
-        case 38: $('#image-up').click();
-          break;
-        case 40: $('#image-down').click();
-          break;
-      }
-    } else {
-      var delta = 50;
-      switch (key) {
-        case 37: moveImage(-delta, 0);
-        e.preventDefault();
-        break;
-        case 39: moveImage(delta, 0);
-        e.preventDefault();
-        break;
-        case 38: moveImage(0, -delta);
-        e.preventDefault();
-        break;
-        case 40: moveImage(0, delta);
-        e.preventDefault();
-        break;
-      }
-    };
-  });
-
   $('#login-form').submit(function(event){
     event.preventDefault();
     verifyUser($('#login').val(), $('#password').val(), event);
@@ -62,7 +24,45 @@ $(function() {
   // Document page checking
   if($('#tree').length > 0) {
     updateNavState({init: true});
-	var userLogin = $('#userLogin').val();
+
+    $(window).keypress(function(e) {
+      var ev = e || window.event;
+      var key = ev.keyCode || ev.which;
+      zoomImage(key);
+    });
+    $(window).keydown(function(e) {
+      var ev = e || window.event;
+      var key = ev.keyCode || ev.which;
+      if (ev.ctrlKey) {
+        switch (key) {
+          case 37: $('#page-previous').click();
+            break;
+          case 39: $('#page-next').click();
+            break;
+          case 38: $('#image-up').click();
+            break;
+          case 40: $('#image-down').click();
+            break;
+        }
+      } else {
+        var delta = 50;
+        switch (key) {
+          case 37: moveImage(-delta, 0);
+          e.preventDefault();
+          break;
+          case 39: moveImage(delta, 0);
+          e.preventDefault();
+          break;
+          case 38: moveImage(0, -delta);
+          e.preventDefault();
+          break;
+          case 40: moveImage(0, delta);
+          e.preventDefault();
+          break;
+        }
+      };
+    });
+    var userLogin = $('#userLogin').val();
     $.get("/getList", {user: userLogin}, function(list) {
       renderTreeview(JSON.parse(list));
       function renderTreeview (treeViewData) {
@@ -79,10 +79,6 @@ $(function() {
               } else {
                 $.get("/getFolderContent", {user: userLogin, fileName: data.text}, function(response) {
                   $('#tree').data('treeview').addNode(data.nodeId, JSON.parse(response));
-                  // $('#tree').treeview('addNode', data.nodeId, JSON.parse(response));
-
-                  // treeViewData[data.nodeId].nodes = JSON.parse(response);
-                  // renderTreeview(treeViewData);
                   $('#tree').treeview('expandNode', [ data.nodeId, { levels: 2, silent: true } ]);
                   $('#progress-bar').hideV();
                 });
@@ -415,11 +411,7 @@ function setImageZooming(imageSource) {
   canvas.addEventListener('mousewheel',handleScroll,false);
 
   tiffImage.src = imageSource;
-  // tiffImage.src = 'http://phrogz.net/tmp/alphaball.png';
-  // ball.src   = 'http://phrogz.net/tmp/alphaball.png';
-
-  // Adds ctx.getTransform() - returns an SVGMatrix
-  // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
+  
   function trackTransforms(ctx){
 		var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
 		var xform = svg.createSVGMatrix();
