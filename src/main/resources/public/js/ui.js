@@ -34,6 +34,7 @@ $(function() {
       var ev = e || window.event;
       var key = ev.keyCode || ev.which;
       if (ev.ctrlKey) {
+        e.preventDefault();
         switch (key) {
           case 37: $('#page-previous').click();
             break;
@@ -220,7 +221,7 @@ function loadImage(userLogin, parentName, fileName) {
     $(".scrollbox").append(canvas);
     setImageZooming(canvas.toDataURL());
 
-    moveImage();
+    // moveImage();
     var targetNode = document.querySelector (".tiff-image");
     triggerMouseEvent (targetNode, "mousedown");
     triggerMouseEvent (targetNode, "mouseup");
