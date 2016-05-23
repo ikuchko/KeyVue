@@ -70,6 +70,7 @@ $(function() {
         	data: treeViewData,
         	levels: 1,
         	onNodeSelected: function(event, data) {
+            console.log(data);
         	  if (data.type === "dir") {
               $('#progress-bar').showV();
               if (data.nodes) {
@@ -84,12 +85,21 @@ $(function() {
                 });
               }
         	  }
+            var parentName = $('#tree').treeview('getParent', data).text;
         	  if (data.type === "tif") {
               currentNode = data;
               updateNavState({node: data});
-              var parentName = $('#tree').treeview('getParent', data).text;
               loadImage(userLogin, parentName, data.files[0].imageName)
         	  }
+            if (data.type === "txt") {
+              // // var filepath = "/temp/" + userLogin + "/" + parentName + "/" + data.text;
+              // // top.location.href = filepath;
+              document.cookie = "Content-Disposition: attachment; filename=Report0.pdf";
+              document.cookie = "Set-Cookie: fileDownload=true; path=/"
+              $.fileDownload("temp/" + userLogin + "/" + parentName + "/" + data.text)
+                .done(function () { alert('File download a success!'); })
+                .fail(function () { alert('File download failed!'); });
+            }
         	}
         });
       };
@@ -411,7 +421,7 @@ function setImageZooming(imageSource) {
   canvas.addEventListener('mousewheel',handleScroll,false);
 
   tiffImage.src = imageSource;
-  
+
   function trackTransforms(ctx){
 		var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
 		var xform = svg.createSVGMatrix();
