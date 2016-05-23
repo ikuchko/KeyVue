@@ -35,7 +35,7 @@ public class DB {
 		return mysqlDS;
 	}
 	
-	public static int requestData(String query, Integer db) {
+	public static int countResult(String query, Integer db) {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		Statement statement = null;
@@ -62,8 +62,50 @@ public class DB {
 		return rowsAmount;
 	}
 	
-	public static Boolean verifyUser(String login, String password) {
-		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND passwd = '%s'", login, password);
-		return (requestData(query, DB_FTPUSER) > 0);
+	public static String requestData(String query, Integer db, String columnName) {
+		ResultSet resultSet = null;
+		Connection connection = null;
+		Statement statement = null;
+		MysqlDataSource dataSource = getMySQLDataSource(db);
+		String result = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			resultSet.last();
+			result = resultSet.getString(columnName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+//				if(resultSet != null) resultSet.close();
+				if(statement != null) statement.close();
+				if(connection != null) connection.close();
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		return result;
 	}
+	
+	public static String getValue (ResultSet resultSet, String columnName) {
+		try {
+			return resultSet.getString(columnName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Boolean verifyUser(String login, String password) {
+		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND keyvue_passwd = '%s'", login, password);
+		return (countResult(query, DB_FTPUSER) > 0);
+	}
+	
+//	public static String getFTPPasswd(String login, String password) {
+//		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND keyvue_passwd = '%s'", login, password);
+//		return (requestData(query, DB_FTPUSER) > 0);
+//	}
 }

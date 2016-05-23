@@ -20,7 +20,8 @@ public class Session {
 	
 	public Session (String user, String passwrd) {
 		this.ftpUserLogin = user;
-		this.ftpUserPassword = passwrd;
+		String query = String.format("SELECT * FROM users WHERE userid LIKE '%s' AND keyvue_passwd LIKE '%s'", user, passwrd);
+		this.ftpUserPassword = DB.requestData(query, DB.DB_FTPUSER, "passwd");
 		this.dateTimeCreated = LocalDateTime.now();
 		sessionList.add(this);
 	}
