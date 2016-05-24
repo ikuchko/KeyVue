@@ -108,6 +108,11 @@ a.task-board {
   padding: 10px;
 }
 
+.popover {
+  max-width: 400px !important;
+  width: 400px;
+}
+
 
 
 

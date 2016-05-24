@@ -25,6 +25,15 @@ $(function() {
   if($('#tree').length > 0) {
     updateNavState({init: true});
 
+    var popoverOptions = {
+      title: "KeyVue hot keys",
+      html: true,
+      content: '<div class="row"><div class="col-sm-6"><p>Next document:</p><p>Previous document:</p><p>Next page:</p><p>Previous page:</p><p>image movement:</p><p>Zoom in:</p><p>Zoom out:</p></div><div class="col-sm-6"><p>ctrl-up</p><p>ctrl-down</p><p>ctrl-right</p><p>ctrl-left</p><p>left|up|right|down</p><p>+</p><p>-</p></div></div>',
+      trigger: 'focus',
+      placement: 'bottom'
+    };
+    $('[data-toggle="popover"]').popover(popoverOptions);
+
     $(window).keypress(function(e) {
       var ev = e || window.event;
       var key = ev.keyCode || ev.which;
