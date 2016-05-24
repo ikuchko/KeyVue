@@ -9,7 +9,7 @@ $(function() {
 
   $('#login-form').submit(function(event){
     event.preventDefault();
-    verifyUser($('#login').val(), $('#password').val(), event);
+    verifyUser($('#username').val(), $('#password').val(), event);
   });
 
   //disabling buttons

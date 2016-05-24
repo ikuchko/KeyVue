@@ -39,7 +39,7 @@ public class App {
 		post("documents", (request, response) -> {
 			HashMap<String, Object> model = new HashMap<String, Object>();
 			model.put("template", "templates/document.vtl");
-			String user = request.queryParams("login");
+			String user = request.queryParams("username");
 			String password = request.queryParams("password");
 			Session session = new Session(user, password);
 			session.setFTPFiles(FTPReader.loadFiles(session));
@@ -52,7 +52,7 @@ public class App {
 			Session session = Session.findSessionByUserLogin(user);
 			return session.getFilesJSON();
 		});
-		
+
 		get("/getFolderContent", (request, response) -> {
 			String user = request.queryParams("user");
 			String fileName = request.queryParams("fileName");
