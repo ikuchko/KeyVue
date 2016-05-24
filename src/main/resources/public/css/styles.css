@@ -95,7 +95,18 @@ a.task-board {
     float: none;
 }
 
+.no-padding {
+  padding: 5px 15px 0px 5px;
+}
 
+.navbar-log {
+  width: 90px;
+  height: auto;
+}
+
+.nav--padding {
+  padding: 10px;
+}
 
 
 

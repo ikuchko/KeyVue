@@ -50,15 +50,15 @@ public class Session {
 	}
 	
 	public String getCustomerName() {
-		return ftpUserPassword;
+		return customerName;
 	}
 	
 	public String getState() {
-		return ftpUserPassword;
+		return state;
 	}
 	
 	public String getCounty() {
-		return ftpUserPassword;
+		return county;
 	}
 	
 	public List<FTPFile> getFTPFiles() {
