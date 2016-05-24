@@ -1,6 +1,7 @@
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -11,8 +12,18 @@ import org.json.simple.JSONObject;
 
 
 public class Session {
+	private final String QUERY = "SELECT users.userid, users.passwd, customers.customer_name, states.state_name, counties.county_name " +
+			"FROM keyvue_users " +
+			"JOIN users ON keyvue_users.users_id = users.id " + 
+			"JOIN customers ON keyvue_users.customer_id = customers.customer_id " +
+			"JOIN counties ON keyvue_users.county_id = counties.county_id " +
+			"JOIN states ON counties.state_id = states.state_id " +
+			"WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')";
 	private String ftpUserLogin;
 	private String ftpUserPassword;
+	private String customerName;
+	private String state;
+	private String county;
 	private LocalDateTime dateTimeCreated;
 	private List<FTPFile> ftpFileList = new ArrayList<>();
 	private List<FTPFile> ftpTxtFileList = new ArrayList<>();
@@ -20,7 +31,12 @@ public class Session {
 	
 	public Session (String user, String passwrd) {
 		this.ftpUserLogin = user;
-		this.ftpUserPassword = passwrd;
+		String query = String.format(QUERY, user, passwrd);
+		HashMap<String, String> dbResult = DB.requestData(query, DB.DB_FTPUSER);
+		this.ftpUserPassword = dbResult.get("passwd");
+		this.customerName = dbResult.get("customer_name");
+		this.state = dbResult.get("state_name");
+		this.county = dbResult.get("county_name");
 		this.dateTimeCreated = LocalDateTime.now();
 		sessionList.add(this);
 	}
@@ -31,6 +47,18 @@ public class Session {
 	
 	public String getFTPUserPassword() {
 		return ftpUserPassword;
+	}
+	
+	public String getCustomerName() {
+		return customerName;
+	}
+	
+	public String getState() {
+		return state;
+	}
+	
+	public String getCounty() {
+		return county;
 	}
 	
 	public List<FTPFile> getFTPFiles() {

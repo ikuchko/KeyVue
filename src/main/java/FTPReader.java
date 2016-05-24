@@ -16,7 +16,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 public class FTPReader {
 	//private static List<FTPFile> ftpFiles;
-	public static final String DESTINATION_DIRECTORY = "src/main/resources/temp/FTPInput/";
+	public static final String DESTINATION_DIRECTORY = "build/resources/main/temp/FTPInput/";
 	private static FTPClient ftp = new FTPClient();
 	private static String server = "";
 

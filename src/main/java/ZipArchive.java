@@ -11,7 +11,7 @@ import net.lingala.zip4j.core.ZipFile;
 
 public class ZipArchive {
 //	private static String DESTINATION_DIRECTORY;
-	public static String DESTINATION = "src/main/resources/public/temp/";
+	public static String DESTINATION = "build/resources/main/public/temp/";
 //	private ZipFile zipFile;
 //	private Session session;
 //	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
