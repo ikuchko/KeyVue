@@ -1,10 +1,12 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Properties;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -12,7 +14,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 public class DB {
 	public static final Integer DB_FTPUSER = 1;
 	public static final Integer DB_DOCUMENTS = 2;
-	
+
 	public static MysqlDataSource getMySQLDataSource(Integer db) {
 		Properties properties = new Properties();
 		FileInputStream fileInputStream = null;
@@ -22,7 +24,7 @@ public class DB {
 			properties.load(fileInputStream);
 			mysqlDS = new MysqlDataSource();
 			if (db == 1) {
-				mysqlDS.setUrl(properties.getProperty("MYSQL_DB_FTPUSERS_URL"));				
+				mysqlDS.setUrl(properties.getProperty("MYSQL_DB_FTPUSERS_URL"));
 			} else if (db == 2) {
 				mysqlDS.setUrl(properties.getProperty("MYSQL_DB_DOCUMENTS_URL"));
 			} else return null;
@@ -34,7 +36,7 @@ public class DB {
 		}
 		return mysqlDS;
 	}
-	
+
 	public static int countResult(String query, Integer db) {
 		ResultSet resultSet = null;
 		Connection connection = null;
@@ -61,19 +63,25 @@ public class DB {
 		}
 		return rowsAmount;
 	}
-	
-	public static String requestData(String query, Integer db, String columnName) {
+
+	public static HashMap<String, String> requestData(String query, Integer db) {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		Statement statement = null;
 		MysqlDataSource dataSource = getMySQLDataSource(db);
-		String result = null;
+		ResultSetMetaData resultSetMetaData;
+		HashMap<String, String> resultMap = new HashMap<>();
+//		String result = null;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
+			resultSetMetaData = resultSet.getMetaData();
 			resultSet.last();
-			result = resultSet.getString(columnName);
+			for (int i=1; i<=resultSetMetaData.getColumnCount(); i++) {
+				resultMap.put(resultSetMetaData.getColumnLabel(i), resultSet.getString(i));
+			}
+//			result = resultSet.getString(columnName);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,9 +94,10 @@ public class DB {
 				sqle.printStackTrace();
 			}
 		}
-		return result;
+//		return result;
+		return resultMap;
 	}
-	
+
 	public static String getValue (ResultSet resultSet, String columnName) {
 		try {
 			return resultSet.getString(columnName);
@@ -98,12 +107,12 @@ public class DB {
 		}
 		return null;
 	}
-	
+
 	public static Boolean verifyUser(String login, String password) {
-		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND keyvue_passwd = '%s'", login, password);
+		String query = String.format("SELECT * FROM keyvue_users JOIN users ON keyvue_users.users_id = users.id WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')", login, password);
 		return (countResult(query, DB_FTPUSER) > 0);
 	}
-	
+
 //	public static String getFTPPasswd(String login, String password) {
 //		String query = String.format("SELECT * FROM users WHERE userid = '%s' AND keyvue_passwd = '%s'", login, password);
 //		return (requestData(query, DB_FTPUSER) > 0);
