@@ -100,7 +100,7 @@ a.task-board {
 }
 
 .no-padding {
-  padding: 5px 15px 0px 5px;
+  padding: 0px !important;
 }
 
 .navbar-log {
@@ -117,6 +117,15 @@ a.task-board {
   width: 400px;
 }
 
+.treeview {
+  max-height: 700px;
+  overflow-y: scroll;
+}
+
+.navbar-default {
+  margin: 0px !important;
+  max-height: 60px;
+}
 
 
 
