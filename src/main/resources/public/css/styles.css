@@ -4,6 +4,10 @@ h1 {
   color: red;
 }
 
+#jumbotron-h1 {
+  font-size: 93px;
+}
+
 h3, h4, p {
   font-family: 'Montserrat', sans-serif;
 }
@@ -15,7 +19,7 @@ a.task-board {
 }
 
 .img-logo {
-  width: 300px;
+  width: 150px;
   height: auto;
 }
 
