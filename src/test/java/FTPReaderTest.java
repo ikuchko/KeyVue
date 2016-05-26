@@ -1,4 +1,4 @@
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
@@ -6,6 +6,12 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.junit.Test;
 
 public class FTPReaderTest {
+	
+	@Test 
+	public void ftp_readPropertyFromPropertyFile() {
+		assertEquals(FTPReader.readProperty("FTP_SERVER_ADDRESS"), "ftpdas2.com");
+	}
+	
 	@Test
 	public void ftp_getFilesListFromServer() {
 		Session session = new Session("lps_dane", "password");
