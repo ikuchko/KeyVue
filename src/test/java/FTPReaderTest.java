@@ -10,7 +10,6 @@ public class FTPReaderTest {
 	public void ftp_getFilesListFromServer() {
 		Session session = new Session("lps_dane", "password");
 		assertTrue(FTPReader.loadFiles(session).size() > 0);
-		assertTrue(FTPReader.loadFiles(session).size() > 0);
 	}
 	
 	@Test

@@ -30,6 +30,7 @@ public class ZipArchive {
 	         zipFile.extractAll(destination);
 	    } catch (ZipException e) {
 	        e.printStackTrace();
+	        System.out.println("Error while extracting zipFile in extractFiles methode");
 	        return false;
 	    }
 		return true;
