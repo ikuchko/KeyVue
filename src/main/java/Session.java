@@ -74,7 +74,7 @@ public class Session {
 	}
 	
 	public void setFTPFiles(List<FTPFile> fileList) {
-		for (int i=0; i<fileList.size(); i++) {
+		for (int i=fileList.size()-1; i>=0; i--) {
 			FTPFile file = fileList.get(i); 
 			if (file.isFile()) {
 				String[] parts = file.getName().split("[.]");
