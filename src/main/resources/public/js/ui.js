@@ -80,7 +80,6 @@ $(function() {
         	data: treeViewData,
         	levels: 1,
         	onNodeSelected: function(event, data) {
-            console.log(data);
         	  if (data.type === "dir") {
               $('#progress-bar').showV();
               if (data.nodes) {

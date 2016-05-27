@@ -3,13 +3,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.net.ftp.FTPFile;
 
 public class Loader implements Runnable {
@@ -29,9 +29,10 @@ public class Loader implements Runnable {
 			String zipDestination = FTPReader.DESTINATION_ZIP + login;
 			String folderDestination = ZipArchive.DESTINATION + login;
 			List<FTPFile> ftpFiles = FTPReader.loadFiles(login, password);
-			File[] localZips = getLocalFiles(zipDestination);
-			File[] localFolders = getLocalFiles(folderDestination);
-			File[] allLocals = (File[]) ArrayUtils.addAll(localFolders, localZips);
+			List<File> localZips = getLocalFiles(zipDestination);
+			List<File> localFolders = getLocalFiles(folderDestination);
+			List<File> allLocals = new ArrayList<File>(localZips);
+			allLocals.addAll(localFolders);
 			Integer removedFiles = removeLocalFiles(allLocals, ftpFiles);
 			Integer loadedFiles = loadFTPFiles(localZips, ftpFiles, login, password);
 			if ((removedFiles < 0) || (loadedFiles < 0) ) {
@@ -42,12 +43,12 @@ public class Loader implements Runnable {
 		return result;
 	}
 
-	private static Integer loadFTPFiles(File[] localZips, List<FTPFile> ftpFiles, String login, String password) {
+	private static Integer loadFTPFiles(List<File> localZips, List<FTPFile> ftpFiles, String login, String password) {
 		Integer count = 0;
 		for (int ftpI=0; ftpI<ftpFiles.size(); ftpI++) {
 			Boolean match = false;
-			for (int localI=0; localI<localZips.length; localI++) {
-				if (localZips[localI].getName().equals(ftpFiles.get(ftpI).getName())) {
+			for (int localI=0; localI<localZips.size(); localI++) {
+				if (localZips.get(localI).getName().equals(ftpFiles.get(ftpI).getName())) {
 					match = true;
 				}
 			}
@@ -59,21 +60,21 @@ public class Loader implements Runnable {
 		return count;
 	}
 
-	private static Integer removeLocalFiles(File[] allLocals, List<FTPFile> ftpFiles) {
+	private static Integer removeLocalFiles(List<File> allLocals, List<FTPFile> ftpFiles) {
 		int count = 0;
-		for (int localI=0; localI<allLocals.length; localI++) {
+		for (int localI=0; localI<allLocals.size(); localI++) {
 			Boolean match = false;
 			for (int ftpI=0; ftpI<ftpFiles.size(); ftpI++) {
-				if (allLocals[localI].getName().equals(ftpFiles.get(ftpI).getName())) {
+				if (allLocals.get(localI).getName().equals(ftpFiles.get(ftpI).getName())) {
 					match = true;
 				}
 			}
 			if (!match) {
 				try {
-					if (allLocals[localI].isDirectory()) {
-						FileUtils.deleteDirectory(allLocals[localI]);
+					if (allLocals.get(localI).isDirectory()) {
+						FileUtils.deleteDirectory(allLocals.get(localI));
 					} else {
-						Files.delete(allLocals[localI].toPath());
+						Files.delete(allLocals.get(localI).toPath());
 					}
 					count++;
 				} catch (IOException e) {
@@ -85,21 +86,23 @@ public class Loader implements Runnable {
 		return count;
 	}
 
-	private static File[] getLocalFiles(String destination) {
+	public static List<File> getLocalFiles(String destination) {
 		File folder = new File(destination);
-		return folder.listFiles();
+		return new LinkedList<File>(Arrays.asList(folder.listFiles()));
 	}
 
 	@Override
 	public void run() {
 		//Infinite loop with sleep method
 		Boolean alwaysAlive = true;
+		Calendar cal;
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 		try {
 			while (alwaysAlive) {
-				Calendar cal = Calendar.getInstance();
-				SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+				cal = Calendar.getInstance();
 				System.out.println("Started synchronization process at: " + sdf.format(cal.getTime()));
 				if (updateFiles()) {
+					cal = Calendar.getInstance();
 			        System.out.println("Ended synchronization process at: " + sdf.format(cal.getTime()) );
 				};
 				Thread.sleep(1000 * 60 * 60);
