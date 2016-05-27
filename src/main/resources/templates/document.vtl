@@ -1,5 +1,5 @@
 <input id="userLogin" type="hidden" value="$session.getFTPUserLogin()">
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand no-padding" href="/">
@@ -11,66 +11,68 @@
         <li class="nav--padding"><h4>$session.getCustomerName():</h4></li>
         <li class="nav--padding"><h4>$session.getState()</h4></li>
         <li class="nav--padding"><h4>$session.getCounty()</h4></li>
+        <li class="nav--padding">
+          <div class="progress" id="progress-bar">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            </div>
+          </div>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" >
-        <li class="nav--padding"><a role="button" tabindex="1" data-toggle="popover">Keybindings</a></li>
+        <li class="nav--padding no-padding"><a role="button" tabindex="1" data-toggle="popover">Keybindings</a></li>
       </ul>
     </div>
   </div>
 </nav>
-<div class="progress" id="progress-bar">
-  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-  </div>
-</div>
-<div class="row">
+<div class="row document-page-row">
   <div class="col-md-3">
-    <div id="tree">
-
-    </div>
-  </div>
-  <div class="col-md-9">
-    <br />
-
     <!-- Navbar -->
     <div class="navigation">
-      <div class="row">
-        <div class="col-md-6 vcenter" >
+        <div>
           <ul class="nav nav-pills">
             <li role="presentation" class="nav--button-image">
               <ul class="nav nav-pills nav-stacked">
                 <li role="presentation">
-                  <button type="button" class="navigation-button" id="image-up"><span class="glyphicon glyphicon-triangle-top span-image" aria-hidden="true"></span></button>
+                  <button type="button" class="navigation-button" id="image-up"><span class="glyphicon glyphicon-triangle-top span-triangle" aria-hidden="true"></span></button>
                 </li>
                 <li role="presentation">
-                  <button type="button" class="navigation-button" id="image-down"><span class="glyphicon glyphicon-triangle-bottom span-image" aria-hidden="true"></span></button>
+                  <button type="button" class="navigation-button" id="image-down"><span class="glyphicon glyphicon-triangle-bottom span-triangle" aria-hidden="true"></span></button>
                 </li>
               </ul>
             </li>
             <li role="presentation">
               <ul class="nav nav-pills nav-stacked">
-                <li role="presentation"><h5 class="navigation-text-sm" id="nextImage"></h5></li>
+                <li role="presentation" class="top-10-padding"><h5 class="navigation-text-sm" id="nextImage"></h5></li>
                 <li role="presentation"><h5 class="navigation-text-normal" id="currentImage"></h5></li>
                 <li role="presentation"><h5 class="navigation-text-sm" id="previousImage"></h5></li>
               </ul>
             </li>
           </ul>
         </div><!--
-     --><div class="col-md-6 vcenter">
+     --><div>
           <ul class="nav nav-pills" style="float: right;">
             <li role="presentation">
-              <h5 class="navigation-text-sm" id="pageLabel"></h5>
+              <h5 class="navigation-text-normal" id="pageLabel"></h5>
             </li>
             <li role="presentation">
-              <button type="button" class="navigation-button-page" id="page-previous"><span class="glyphicon glyphicon-triangle-left span-page" aria-hidden="true"></span></button>
+              <button type="button" class="navigation-button" id="page-previous"><span class="glyphicon glyphicon-triangle-left span-triangle" aria-hidden="true"></span></button>
             </li>
             <li role="presentation">
-              <button type="button" class="navigation-button-page" id="page-next"><span class="glyphicon glyphicon-triangle-right span-page" aria-hidden="true"></span></button>
+              <button type="button" class="navigation-button" id="page-next"><span class="glyphicon glyphicon-triangle-right span-triangle" aria-hidden="true"></span></button>
             </li>
           </ul>
         </div>
-      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    <!-- treeview -->
+    <div id="tree">
 
     </div>
+  </div>
+  <div class="col-md-9">
 
     <div class="scrollbox">
 

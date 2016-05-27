@@ -1,7 +1,9 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import java.sql.Connection;
@@ -64,22 +66,25 @@ public class DB {
 		return rowsAmount;
 	}
 
-	public static HashMap<String, String> requestData(String query, Integer db) {
+	public static List<HashMap<String, String>> requestData(String query, Integer db) {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		Statement statement = null;
 		MysqlDataSource dataSource = getMySQLDataSource(db);
 		ResultSetMetaData resultSetMetaData;
-		HashMap<String, String> resultMap = new HashMap<>();
-//		String result = null;
+		List<HashMap<String, String>> result = new ArrayList<HashMap<String,String>>();
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 			resultSetMetaData = resultSet.getMetaData();
-			resultSet.last();
-			for (int i=1; i<=resultSetMetaData.getColumnCount(); i++) {
-				resultMap.put(resultSetMetaData.getColumnLabel(i), resultSet.getString(i));
+//			resultSet.first();
+			while (resultSet.next()) {
+				HashMap<String, String> hashMap = new HashMap<>();
+				for (int i=1; i<=resultSetMetaData.getColumnCount(); i++) {
+					hashMap.put(resultSetMetaData.getColumnLabel(i), resultSet.getString(i));
+				}
+				result.add(hashMap);
 			}
 //			result = resultSet.getString(columnName);
 		} catch (SQLException e) {
@@ -94,19 +99,18 @@ public class DB {
 				sqle.printStackTrace();
 			}
 		}
-//		return result;
-		return resultMap;
+		return result;
 	}
 
-	public static String getValue (ResultSet resultSet, String columnName) {
-		try {
-			return resultSet.getString(columnName);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	public static String getValue (ResultSet resultSet, String columnName) {
+//		try {
+//			return resultSet.getString(columnName);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 	public static Boolean verifyUser(String login, String password) {
 		String query = String.format("SELECT * FROM keyvue_users JOIN users ON keyvue_users.users_id = users.id WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')", login, password);

@@ -32,11 +32,11 @@ public class Session {
 	public Session (String user, String passwrd) {
 		this.ftpUserLogin = user;
 		String query = String.format(QUERY, user, passwrd);
-		HashMap<String, String> dbResult = DB.requestData(query, DB.DB_FTPUSER);
-		this.ftpUserPassword = dbResult.get("passwd");
-		this.customerName = dbResult.get("customer_name");
-		this.state = dbResult.get("state_name");
-		this.county = dbResult.get("county_name");
+		List<HashMap<String, String>> dbResult = DB.requestData(query, DB.DB_FTPUSER);
+		this.ftpUserPassword = dbResult.get(0).get("passwd");
+		this.customerName = dbResult.get(0).get("customer_name");
+		this.state = dbResult.get(0).get("state_name");
+		this.county = dbResult.get(0).get("county_name");
 		this.dateTimeCreated = LocalDateTime.now();
 		sessionList.add(this);
 	}
@@ -74,7 +74,7 @@ public class Session {
 	}
 	
 	public void setFTPFiles(List<FTPFile> fileList) {
-		for (int i=0; i<fileList.size(); i++) {
+		for (int i=fileList.size()-1; i>=0; i--) {
 			FTPFile file = fileList.get(i); 
 			if (file.isFile()) {
 				String[] parts = file.getName().split("[.]");

@@ -21,6 +21,10 @@ public class App {
 
 	public static void main(String[] args) {
 		// secure(keystoreFile, keystorePassword, truststoreFile, truststorePassword);
+		
+		Thread loaderThread = new Thread(new Loader());
+		loaderThread.start();
+		
 		String layout = "templates/layout.vtl";
 		staticFileLocation("/public");
 

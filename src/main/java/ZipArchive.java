@@ -10,17 +10,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import net.lingala.zip4j.core.ZipFile;
 
 public class ZipArchive {
-//	private static String DESTINATION_DIRECTORY;
-	public static String DESTINATION = "build/resources/main/public/temp/";
-//	private ZipFile zipFile;
-//	private Session session;
-//	private List<List<String>> tiffFiles = new ArrayList<List<String>>();
-//	private List<String> txtFiles = new ArrayList<>();
-
-//	public ZipArchive(ZipFile zipFile, Session session) {
-//		this.zipFile = zipFile;
-//		this.DESTINATION_DIRECTORY = "src/main/resources/public/temp/" + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
-//	}
+	public static final String DESTINATION = "build/resources/main/public/temp/";
 
 	public static Boolean extractFiles (ZipFile zipFile, Session session) {
 		String destination = DESTINATION + session.getFTPUserLogin() + "/" + zipFile.getFile().getName();
@@ -30,24 +20,17 @@ public class ZipArchive {
 	         zipFile.extractAll(destination);
 	    } catch (ZipException e) {
 	        e.printStackTrace();
+	        System.out.println("Error while extracting zipFile in extractFiles methode");
 	        return false;
 	    }
 		return true;
 	}
 
-//	public List<String> getTxtFiles() {
-//		return txtFiles;
-//	}
-//
-//	public List<List<String>> getTiffFiles() {
-//		return tiffFiles;
-//	}
-
 	public static List<String> getFiles(String type, String searchFolder, Session session) {
 		List<String> files = new ArrayList<>();
 		File folder = new File(DESTINATION + session.getFTPUserLogin() + "/" + searchFolder);
 		if ((!folder.exists()) || folder.listFiles().length < 1) {
-			extractFiles(FTPReader.getZipFile(session, session.getFTPFileByName(searchFolder)), session);
+			extractFiles(FTPReader.getZipFile(session, searchFolder), session);
 		}
 		File[] listOfFiles = folder.listFiles();
 		for (int i=0; i<listOfFiles.length-1; i++) {
@@ -63,12 +46,6 @@ public class ZipArchive {
 		}
 		return files;
 	}
-
-//	public void readExtractedFiles() {
-//		this.txtFiles = getFiles("txt");
-//		this.tiffFiles = assambleTiffFiles(getFiles("tif"));
-//	}
-
 
 	public static List<List<String>> assambleTiffFiles(List<String> files) {
 		List<List<String>> resultList = new ArrayList<List<String>>();
