@@ -67,7 +67,7 @@ public class ZipArchiveTest {
 	public void zip_AssembledTIFFilesHasBeenProcessedAllFiles() {
 		String fileName = new File(FTPReader.DESTINATION_ZIP + "lps_dane").listFiles()[0].getName();
 		Session session = new Session("lps_dane", "password");
-		session.setFTPFiles(FTPReader.loadFiles(session));
+//		session.setFTPFiles(FTPReader.loadFiles(session));
 		List<List<String>> assembledList = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", fileName, session));
 		int amount = 0;
 		for (int i=0; i<assembledList.size(); i++) {

@@ -46,7 +46,6 @@ public class App {
 			String user = request.queryParams("username");
 			String password = request.queryParams("password");
 			Session session = new Session(user, password);
-			session.setFTPFiles(FTPReader.loadFiles(session));
 			model.put("session", session);
 			return new ModelAndView(model, layout);
 		}, new VelocityTemplateEngine());

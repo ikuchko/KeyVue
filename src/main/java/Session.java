@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 
 
+
 public class Session {
 	private final String QUERY = "SELECT users.userid, users.passwd, customers.customer_name, states.state_name, counties.county_name " +
 			"FROM keyvue_users " +
@@ -25,7 +26,6 @@ public class Session {
 	private String state;
 	private String county;
 	private LocalDateTime dateTimeCreated;
-	private List<FTPFile> ftpFileList = new ArrayList<>();
 	private List<FTPFile> ftpTxtFileList = new ArrayList<>();
 	private static List<Session> sessionList = new ArrayList<>();
 	
@@ -40,7 +40,7 @@ public class Session {
 		this.dateTimeCreated = LocalDateTime.now();
 		sessionList.add(this);
 	}
-	
+
 	public String getFTPUserLogin() {
 		return ftpUserLogin;
 	}
@@ -61,9 +61,6 @@ public class Session {
 		return county;
 	}
 	
-	public List<FTPFile> getFTPFiles() {
-		return ftpFileList;
-	}
 	
 	public List<FTPFile> getFTPTxtFiles() {
 		return ftpTxtFileList;
@@ -73,20 +70,9 @@ public class Session {
 		return sessionList;
 	}
 	
-	public void setFTPFiles(List<FTPFile> fileList) {
-		for (int i=fileList.size()-1; i>=0; i--) {
-			FTPFile file = fileList.get(i); 
-			if (file.isFile()) {
-				String[] parts = file.getName().split("[.]");
-				if (parts[parts.length-1].equals("zip")) {
-					this.ftpFileList.add(file);
-				} else {
-					this.ftpTxtFileList.add(file);
-				}
-			} else {
-				this.ftpFileList.add(file);   //populate list with directories
-			}
-		}
+	public List<File> readLocalFiles() {
+		String destination = FTPReader.DESTINATION_ZIP + ftpUserLogin;
+		return Loader.getLocalFiles(destination);
 	}
 	
 	public static Session findSessionByUserLogin(String ftpUserLogin) {
@@ -100,18 +86,15 @@ public class Session {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getFilesJSON() {
+		List<File> fileList = readLocalFiles();
 		JSONArray arrayJASON = new JSONArray();
-		for (int i=0; i<ftpFileList.size(); i++) {
+		for (int i=0; i<fileList.size(); i++) {
 			JSONObject objectJSON = new JSONObject();
-			objectJSON.put("text", ftpFileList.get(i).getName());
+			objectJSON.put("text", fileList.get(i).getName());
 			objectJSON.put("icon", "glyphicon glyphicon-folder-close");
 			objectJSON.put("type", "dir");
-//			objectJSON.put("selectedIcon", "glyphicon glyphicon-folder-open");
-//			JSONObject stateJSON = new JSONObject();
-//			stateJSON.put("expanded", "false");
-//			objectJSON.put("state", stateJSON);
-			if (isFolderExtracted(ftpFileList.get(i))) {
-				objectJSON.put("nodes", getFolderContentJSON(ftpFileList.get(i).getName()));
+			if (isFolderExtracted(fileList.get(i))) {
+				objectJSON.put("nodes", getFolderContentJSON(fileList.get(i).getName()));
 			}
 			arrayJASON.add(objectJSON);
 			
@@ -119,7 +102,7 @@ public class Session {
 		return arrayJASON;
 	}
 	
-	private Boolean isFolderExtracted(FTPFile ftpFile) {
+	private Boolean isFolderExtracted(File ftpFile) {
 		File file = new File(ZipArchive.DESTINATION + ftpUserLogin + "/" + ftpFile.getName());
 		return file.exists();
 	}
@@ -153,10 +136,11 @@ public class Session {
 		return arrayJSON;
 	}
 
-	public FTPFile getFTPFileByName(String fileName) {
-		for (int i=0; i<ftpFileList.size(); i++) {
-			if (ftpFileList.get(i).getName().equals(fileName)) {
-				return ftpFileList.get(i);
+	public File getFileByName(String fileName) {
+		List<File> fileList = readLocalFiles();
+		for (int i=0; i<fileList.size(); i++) {
+			if (fileList.get(i).getName().equals(fileName)) {
+				return fileList.get(i);
 			}
 		}
 		return null;
