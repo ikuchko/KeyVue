@@ -88,7 +88,7 @@ public class Session {
 	public List<String> getFilesJSON() {
 		List<File> fileList = readLocalFiles();
 		JSONArray arrayJASON = new JSONArray();
-		for (int i=0; i<fileList.size(); i++) {
+		for (int i=fileList.size()-1; i>=0; i--) {
 			JSONObject objectJSON = new JSONObject();
 			objectJSON.put("text", fileList.get(i).getName());
 			objectJSON.put("icon", "glyphicon glyphicon-folder-close");
