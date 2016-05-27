@@ -31,7 +31,7 @@ public class SessionTest {
 		List<FTPFile> fileList = FTPReader.loadFiles(session);
 		session.setFTPFiles(fileList);
 		assertTrue(session.getFTPFiles().size() > 0);
-		assertTrue(session.getFTPTxtFiles().size() > 0);
+//		assertTrue(session.getFTPTxtFiles().size() > 0);
 	}
 	
 	@Test 

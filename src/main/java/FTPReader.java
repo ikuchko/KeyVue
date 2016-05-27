@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import net.lingala.zip4j.core.ZipFile;
@@ -30,17 +31,26 @@ public class FTPReader {
 			}
 
 			// Get data from the server
-			fileList = Arrays.asList(ftp.listFiles("/"));
-			for (Iterator<FTPFile> iter = fileList.iterator(); iter.hasNext(); ) {
-				FTPFile ftpFile = iter.next();
-				System.out.println(ftpFile.getName());
+			fileList = new LinkedList<FTPFile>(Arrays.asList(ftp.listFiles("/")));
+			Iterator<FTPFile> iterator = fileList.iterator();
+			while (iterator.hasNext()) {
+				FTPFile ftpFile = iterator.next();
 				String[] parts = ftpFile.getName().split("[.]");
 				if (!parts[parts.length-1].equals("zip")) {
-					fileList.remove(ftpFile);
-					System.out.println(ftpFile.getName() + " removed");
-//					iter.remove();
+					iterator.remove();
 				}
 			}
+			
+//			for (Iterator<FTPFile> iter = fileList.iterator(); iter.hasNext(); ) {
+//				FTPFile ftpFile = iter.next();
+//				System.out.println(ftpFile.getName());
+//				String[] parts = ftpFile.getName().split("[.]");
+//				if (!parts[parts.length-1].equals("zip")) {
+//					fileList.remove(ftpFile);
+//					System.out.println(ftpFile.getName() + " removed");
+////					iter.remove();
+//				}
+//			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
