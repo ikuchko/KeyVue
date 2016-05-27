@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.net.ftp.FTPFile;
 
-public class Loader {
+public class Loader implements Runnable {
 	private static final String QUERY = "SELECT users.userid, users.passwd " +
 			"FROM keyvue_users " +
 			"JOIN users ON keyvue_users.users_id = users.id " + 
@@ -30,14 +32,18 @@ public class Loader {
 			File[] localZips = getLocalFiles(zipDestination);
 			File[] localFolders = getLocalFiles(folderDestination);
 			File[] allLocals = (File[]) ArrayUtils.addAll(localFolders, localZips);
-			if (!(removeLocalFiles(allLocals, ftpFiles)) || !(loadFTPFiles(localZips, ftpFiles, login, password)) ) {
+			Integer removedFiles = removeLocalFiles(allLocals, ftpFiles);
+			Integer loadedFiles = loadFTPFiles(localZips, ftpFiles, login, password);
+			if ((removedFiles < 0) || (loadedFiles < 0) ) {
 				result = false;
 			};
+			System.out.println("--- " + login + " (removed: " + removedFiles + ", loaded: " + loadedFiles + ")");
 		}
 		return result;
 	}
 
-	private static boolean loadFTPFiles(File[] localZips, List<FTPFile> ftpFiles, String login, String password) {
+	private static Integer loadFTPFiles(File[] localZips, List<FTPFile> ftpFiles, String login, String password) {
+		Integer count = 0;
 		for (int ftpI=0; ftpI<ftpFiles.size(); ftpI++) {
 			Boolean match = false;
 			for (int localI=0; localI<localZips.length; localI++) {
@@ -47,12 +53,14 @@ public class Loader {
 			}
 			if (!match) {
 				FTPReader.getZipFile(login, password, ftpFiles.get(ftpI).getName());
+				count++;
 			}
 		}
-		return true;
+		return count;
 	}
 
-	private static Boolean removeLocalFiles(File[] allLocals, List<FTPFile> ftpFiles) {
+	private static Integer removeLocalFiles(File[] allLocals, List<FTPFile> ftpFiles) {
+		int count = 0;
 		for (int localI=0; localI<allLocals.length; localI++) {
 			Boolean match = false;
 			for (int ftpI=0; ftpI<ftpFiles.size(); ftpI++) {
@@ -67,18 +75,38 @@ public class Loader {
 					} else {
 						Files.delete(allLocals[localI].toPath());
 					}
+					count++;
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-					return false;
+//					return -1;
 				}
 			}
 		}
-		return true;
+		return count;
 	}
 
 	private static File[] getLocalFiles(String destination) {
 		File folder = new File(destination);
 		return folder.listFiles();
+	}
+
+	@Override
+	public void run() {
+		//Infinite loop with sleep method
+		Boolean alwaysAlive = true;
+		try {
+			while (alwaysAlive) {
+				Calendar cal = Calendar.getInstance();
+				SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+				System.out.println("Started synchronization process at: " + sdf.format(cal.getTime()));
+				if (updateFiles()) {
+			        System.out.println("Ended synchronization process at: " + sdf.format(cal.getTime()) );
+				};
+				Thread.sleep(1000 * 60 * 60);
+			}
+		} catch (InterruptedException e) {
+			System.out.println("Something interupt loader thread.");
+		}
+		
 	}
 }
