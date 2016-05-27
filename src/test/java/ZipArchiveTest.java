@@ -19,8 +19,8 @@ public class ZipArchiveTest {
 	public void zip_extracteFilesReturnTrue() {
 		ZipFile zipFile = null;
 		try {
-			String fileName = new File(FTPReader.DESTINATION_DIRECTORY + "lps_dane").listFiles()[0].getName();
-			zipFile = new ZipFile(FTPReader.DESTINATION_DIRECTORY + "lps_dane/" + fileName);
+			String fileName = new File(FTPReader.DESTINATION_ZIP + "lps_dane").listFiles()[0].getName();
+			zipFile = new ZipFile(FTPReader.DESTINATION_ZIP + "lps_dane/" + fileName);
 		} catch (ZipException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,20 +52,20 @@ public class ZipArchiveTest {
 	@Test
 	public void zip_returnsListOfDisassembledTIFFiles() {
 		Session session = new Session("lps_dane", "password");
-		String fileName = new File(FTPReader.DESTINATION_DIRECTORY + "lps_dane").listFiles()[0].getName();
+		String fileName = new File(FTPReader.DESTINATION_ZIP + "lps_dane").listFiles()[0].getName();
 		assertTrue(ZipArchive.getFiles("tif", fileName, session).size() > 0);
 	}
 
 	@Test
 	public void zip_returnsListOfAssembledTIFFiles() {
 		Session session = new Session("lps_dane", "password");
-		String fileName = new File(FTPReader.DESTINATION_DIRECTORY + "lps_dane").listFiles()[0].getName();
+		String fileName = new File(FTPReader.DESTINATION_ZIP + "lps_dane").listFiles()[0].getName();
 		assertTrue(ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", fileName, session)).get(0).size() > 0);
 	}
 
 	@Test
 	public void zip_AssembledTIFFilesHasBeenProcessedAllFiles() {
-		String fileName = new File(FTPReader.DESTINATION_DIRECTORY + "lps_dane").listFiles()[0].getName();
+		String fileName = new File(FTPReader.DESTINATION_ZIP + "lps_dane").listFiles()[0].getName();
 		Session session = new Session("lps_dane", "password");
 		session.setFTPFiles(FTPReader.loadFiles(session));
 		List<List<String>> assembledList = ZipArchive.assambleTiffFiles(ZipArchive.getFiles("tif", fileName, session));
