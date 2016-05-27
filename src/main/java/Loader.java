@@ -87,8 +87,12 @@ public class Loader implements Runnable {
 	}
 
 	public static List<File> getLocalFiles(String destination) {
+		List<File> resultList = new LinkedList<File>();
 		File folder = new File(destination);
-		return new LinkedList<File>(Arrays.asList(folder.listFiles()));
+		if (folder.exists()) {
+			resultList = new LinkedList<File>(Arrays.asList(folder.listFiles()));
+		}
+		return resultList;
 	}
 
 	@Override
