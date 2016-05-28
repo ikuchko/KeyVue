@@ -132,20 +132,24 @@ $(function() {
   });
   $('#page-next').on("click", function() {
     if (currentNode) {
-      var userLogin = $('#userLogin').val();
-      var parentName = $('#tree').treeview('getParent', currentNode).text;
-      $('#progress-bar').showV();
-      page++;
-      loadImage(userLogin, parentName, currentNode.files[page].imageName);
+      if (page < currentNode.files.length - 1) {
+        var userLogin = $('#userLogin').val();
+        var parentName = $('#tree').treeview('getParent', currentNode).text;
+        $('#progress-bar').showV();
+        page++;
+        loadImage(userLogin, parentName, currentNode.files[page].imageName);
+      }
     }
   });
   $('#page-previous').on("click", function() {
     if (currentNode) {
-      var userLogin = $('#userLogin').val();
-      var parentName = $('#tree').treeview('getParent', currentNode).text;
-      $('#progress-bar').showV();
-      page--;
-      loadImage(userLogin, parentName, currentNode.files[page].imageName);
+      if (page > 0) {
+        var userLogin = $('#userLogin').val();
+        var parentName = $('#tree').treeview('getParent', currentNode).text;
+        $('#progress-bar').showV();
+        page--;
+        loadImage(userLogin, parentName, currentNode.files[page].imageName);
+      }
     }
   });
 });
