@@ -113,7 +113,8 @@ public class DB {
 //	}
 
 	public static Boolean verifyUser(String login, String password) {
-		String query = String.format("SELECT * FROM keyvue_users JOIN users ON keyvue_users.users_id = users.id WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')", login, password);
+//		String query = String.format("SELECT * FROM keyvue_users JOIN users ON keyvue_users.users_id = users.id WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')", login, password);
+		String query = String.format("SELECT * FROM keyvue_users WHERE keyvue_login = '%s' AND keyvue_passwd = MD5('%s')", login, password);
 		return (countResult(query, DB_FTPUSER) > 0);
 	}
 

@@ -19,7 +19,7 @@ public class Session {
 			"JOIN customers ON keyvue_users.customer_id = customers.customer_id " +
 			"JOIN counties ON keyvue_users.county_id = counties.county_id " +
 			"JOIN states ON counties.state_id = states.state_id " +
-			"WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')";
+			"WHERE keyvue_users.keyvue_login = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')";
 	private String ftpUserLogin;
 	private String ftpUserPassword;
 	private String customerName;
@@ -30,9 +30,9 @@ public class Session {
 	private static List<Session> sessionList = new ArrayList<>();
 	
 	public Session (String user, String passwrd) {
-		this.ftpUserLogin = user;
 		String query = String.format(QUERY, user, passwrd);
 		List<HashMap<String, String>> dbResult = DB.requestData(query, DB.DB_FTPUSER);
+		this.ftpUserLogin = dbResult.get(0).get("userid");
 		this.ftpUserPassword = dbResult.get(0).get("passwd");
 		this.customerName = dbResult.get(0).get("customer_name");
 		this.state = dbResult.get(0).get("state_name");
