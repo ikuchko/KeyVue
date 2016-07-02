@@ -16,6 +16,20 @@ version = '1.0'
 applicationName = "KeyVue"
 mainClassName = "App"
 
+distributions {
+    main {
+        contents {
+            from('resources/mySQL.properties') {
+                into 'resources'
+            }
+        }
+    }
+}
+
+tasks.withType(CreateStartScripts) {
+    classpath += files('resources/mySQL.properties')
+}
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
