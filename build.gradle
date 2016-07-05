@@ -20,7 +20,7 @@ distributions {
     main {
         contents {
             from('resources/mySQL.properties') {
-                into 'resources'
+                into 'bin/resources'
             }
         }
     }
