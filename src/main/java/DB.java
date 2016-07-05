@@ -102,16 +102,6 @@ public class DB {
 		return result;
 	}
 
-//	public static String getValue (ResultSet resultSet, String columnName) {
-//		try {
-//			return resultSet.getString(columnName);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
 	public static Boolean verifyUser(String login, String password) {
 //		String query = String.format("SELECT * FROM keyvue_users JOIN users ON keyvue_users.users_id = users.id WHERE users.userid = '%s' AND keyvue_users.keyvue_passwd = MD5('%s')", login, password);
 		String query = String.format("SELECT * FROM keyvue_users WHERE keyvue_login = '%s' AND keyvue_passwd = MD5('%s')", login, password);
