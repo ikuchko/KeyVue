@@ -225,23 +225,23 @@ function loadImage(userLogin, parentName, fileName) {
   xhr.responseType = 'arraybuffer';
   xhr.open('get', "/temp/" + userLogin + "/" + parentName + "/" + fileName);
   xhr.onload = function ( e ) {
-    Tiff.initialize({TOTAL_MEMORY: 133554432 })
+    Tiff.initialize({TOTAL_MEMORY: 233554432 })
     var tiff = new Tiff({buffer: xhr.response});
     $(".tiff-image").remove();
-    var canvas = tiff.toCanvas();
-    $(canvas).addClass("tiff-image");
-    $(".scrollbox").append(canvas);
-    setImageZooming(canvas.toDataURL());
+    // var canvas = document.createElement("canvas");
+    // $(canvas).addClass("tiff-image");
+    // $(".scrollbox").append(canvas);
+    setImageZooming(tiff.toDataURL());
 
     // moveImage();
-    var targetNode = document.querySelector (".tiff-image");
-    triggerMouseEvent (targetNode, "mousedown");
-    triggerMouseEvent (targetNode, "mouseup");
-    function triggerMouseEvent (node, eventType) {
-      var clickEvent = document.createEvent ('MouseEvents');
-      clickEvent.initEvent (eventType, true, true);
-      node.dispatchEvent (clickEvent);
-    }
+    // var targetNode = document.querySelector (".tiff-image");
+    // triggerMouseEvent (targetNode, "mousedown");
+    // triggerMouseEvent (targetNode, "mouseup");
+    // function triggerMouseEvent (node, eventType) {
+    //   var clickEvent = document.createEvent ('MouseEvents');
+    //   clickEvent.initEvent (eventType, true, true);
+    //   node.dispatchEvent (clickEvent);
+    // }
 
 
     $('#progress-bar').hideV();
@@ -329,11 +329,16 @@ function zoomImage(key) {
 
 
 function setImageZooming(imageSource) {
-  var canvas = document.getElementsByTagName('canvas')[0];
+  var canvas = document.createElement("canvas");
+  canvas.className = "tiff-image";
+  var scrollbox = document.getElementById('scrollbox')
+  scrollbox.appendChild(canvas);
+  // var canvas = document.getElementsByTagName('canvas')[0];
   canvas.width = 800; canvas.height = 1000;
   var tiffImage = new Image;
   var ctx = canvas.getContext('2d');
   trackTransforms(ctx);
+  // ctx.drawImage(tiffImage,0,0);
   function redraw(){
     // Clear the entire canvas
     var p1 = ctx.transformedPoint(0,0);
@@ -343,37 +348,37 @@ function setImageZooming(imageSource) {
 
     ctx.drawImage(tiffImage,0,0);
 
-    ctx.beginPath();
-    ctx.lineWidth = 6;
-    ctx.moveTo(399,250);
-    ctx.lineTo(474,256);
-
-    ctx.save();
-    ctx.translate(4,2);
-    ctx.beginPath();
-    ctx.lineWidth = 1;
-    ctx.moveTo(436,253);
-    ctx.lineTo(437.5,233);
-
-    ctx.save();
-    ctx.translate(438.5,223);
-    ctx.strokeStyle = '#06c';
-    ctx.beginPath();
-    ctx.lineWidth = 0.05;
-    for (var i=0;i<60;++i){
-      ctx.rotate(6*i*Math.PI/180);
-      ctx.moveTo(9,0);
-      ctx.lineTo(10,0);
-      ctx.rotate(-6*i*Math.PI/180);
-    }
-    ctx.restore();
-
-    ctx.beginPath();
-    ctx.lineWidth = 0.2;
-    ctx.arc(438.5,223,10,0,Math.PI*2);
-    ctx.restore();
+    // ctx.beginPath();
+    // ctx.lineWidth = 6;
+    // ctx.moveTo(399,250);
+    // ctx.lineTo(474,256);
+    //
+    // ctx.save();
+    // ctx.translate(4,2);
+    // ctx.beginPath();
+    // ctx.lineWidth = 1;
+    // ctx.moveTo(436,253);
+    // ctx.lineTo(437.5,233);
+    //
+    // ctx.save();
+    // ctx.translate(438.5,223);
+    // ctx.strokeStyle = '#06c';
+    // ctx.beginPath();
+    // ctx.lineWidth = 0.05;
+    // for (var i=0;i<60;++i){
+    //   ctx.rotate(6*i*Math.PI/180);
+    //   ctx.moveTo(9,0);
+    //   ctx.lineTo(10,0);
+    //   ctx.rotate(-6*i*Math.PI/180);
+    // }
+    // ctx.restore();
+    //
+    // ctx.beginPath();
+    // ctx.lineWidth = 0.2;
+    // ctx.arc(438.5,223,10,0,Math.PI*2);
+    // ctx.restore();
   }
-  redraw();
+  // redraw();
 
   var lastX=canvas.width/2, lastY=canvas.height/2;
   var dragStart,dragged;
@@ -420,10 +425,13 @@ function setImageZooming(imageSource) {
     var pt = ctx.transformedPoint(lastX,lastY);
     var factor = 0.3;
     ctx.scale(factor,factor);
-    ctx.translate(-200,0);
-    redraw();
+    ctx.translate(0,0);
+    tiffImage.onload = function() {
+      ctx.drawImage(tiffImage,0,0);
+    }
   }
   resizeImage();
+  tiffImage.src = imageSource;
 
   var handleScroll = function(evt){
     var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
@@ -433,7 +441,7 @@ function setImageZooming(imageSource) {
   canvas.addEventListener('DOMMouseScroll',handleScroll,false);
   canvas.addEventListener('mousewheel',handleScroll,false);
 
-  tiffImage.src = imageSource;
+
 
   function trackTransforms(ctx){
 		var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
